@@ -39,17 +39,18 @@
  *
  * DocAIView is the primary consumer of this component.
  */
-import { Box } from "@mui/material";
-import EntityHilight from "./EntityHilight";
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react"
+import { Box } from "@mui/material"
+import PropTypes from "prop-types"
 import {
   INITIAL_VALUE,
+  POSITION_NONE,
   ReactSVGPanZoom,
   TOOL_NONE,
-  POSITION_NONE,
-} from "react-svg-pan-zoom";
-import { imageScale } from "./utils";
-import PropTypes from "prop-types";
+} from "react-svg-pan-zoom"
+
+import EntityHilight from "./EntityHilight"
+import { imageScale } from "./utils"
 
 /**
  * Props:
@@ -71,48 +72,48 @@ import PropTypes from "prop-types";
  * @returns N/A
  */
 
-let timer;
+let timer
 function debounce(fn, ms) {
-  return (_) => {
-    clearTimeout(timer);
-    timer = setTimeout((_) => {
-      timer = null;
-      fn.apply(this, arguments);
-    }, ms);
-  };
+  return () => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      timer = null
+      fn.apply(this, arguments)
+    }, ms)
+  }
 }
 
 function DrawDocument(props) {
-  const minSize = { width: 10, height: 10 };
-  const viewerRef = useRef(null);
-  const ref1 = useRef(null);
-  const [tool, setTool] = useState(TOOL_NONE);
-  const [value, setValue] = useState(INITIAL_VALUE);
-  const [svgContainerSize, setSvgContainerSize] = useState(minSize);
+  const minSize = { width: 10, height: 10 }
+  const viewerRef = useRef(null)
+  const ref1 = useRef(null)
+  const [tool, setTool] = useState(TOOL_NONE)
+  const [value, setValue] = useState(INITIAL_VALUE)
+  const [svgContainerSize, setSvgContainerSize] = useState(minSize)
 
   // When the Dom has rendered, fit the SVG to viewer.
   useEffect(() => {
     if (viewerRef.current) {
-      viewerRef.current.fitToViewer();
+      viewerRef.current.fitToViewer()
     }
-  }, []);
+  }, [])
 
   // Handle a calculation of the container size.
   useEffect(() => {
     if (ref1.current) {
-      const br = ref1.current.getBoundingClientRect();
-      const w = ref1.current.offsetWidth;
-      const h = ref1.current.offsetHeight;
+      const br = ref1.current.getBoundingClientRect()
+      const w = ref1.current.offsetWidth
+      const h = ref1.current.offsetHeight
       console.log(
         `useEffect: NewSize:: ${w}x${h}, currentSize: ${
           svgContainerSize.width
         }x${svgContainerSize.height} ${JSON.stringify(br)}`
-      );
+      )
       if (w !== svgContainerSize.width || h !== svgContainerSize.height) {
-        setSvgContainerSize({ width: w, height: h });
+        setSvgContainerSize({ width: w, height: h })
       }
     }
-  }, [svgContainerSize.width, svgContainerSize.height]);
+  }, [svgContainerSize.width, svgContainerSize.height])
 
   // Handle a window resize.
   useEffect(() => {
@@ -129,26 +130,26 @@ function DrawDocument(props) {
       //setRefreshState(refreshState+1)
 
       //console.log(`Setting the size to ${minSize.width}x${minSize.height}`)
-      setSvgContainerSize(minSize); // The window has resized.  Set the Svg size to something small that will force a resize.
-    }, 1000);
+      setSvgContainerSize(minSize) // The window has resized.  Set the Svg size to something small that will force a resize.
+    }, 1000)
 
     //console.log("Adding window resize handler")
-    window.addEventListener("resize", debouncedHandleResize);
+    window.addEventListener("resize", debouncedHandleResize)
 
     return () => {
       //console.log("Removing window resize handler")
-      window.removeEventListener("resize", debouncedHandleResize);
-    };
-  }, [minSize]);
+      window.removeEventListener("resize", debouncedHandleResize)
+    }
+  }, [minSize])
 
   /**
    * Invoked when an entity on the SVG is cliecked.
    * @param {*} entity The entity that was clicked.
    * @param {*} evt
    */
-  function entityClick(entity, evt) {
+  function entityClick(entity) {
     if (props.entityOnClick) {
-      props.entityOnClick(entity);
+      props.entityOnClick(entity)
     }
   }
   // Determine the optimal size of the image
@@ -161,13 +162,13 @@ function DrawDocument(props) {
    * But what of the width?  It should be 600 x whatever we scaled the height.  The height scalled from 800->100.
    * This is a multiplier of (viewHeight/imageHeight)
    */
-  const imageSize = imageScale(svgContainerSize, props.imageSize);
+  const imageSize = imageScale(svgContainerSize, props.imageSize)
   const imageSizeSmaller = {
     width: Math.max(imageSize.width - 10, 0),
     height: Math.max(imageSize.height - 10, 0),
     x: imageSize.x + 5,
     y: imageSize.y + 5,
-  };
+  }
   return (
     <Box
       ref={ref1}
@@ -223,13 +224,13 @@ function DrawDocument(props) {
                   onClick={entityClick}
                   hilight={props.hilight}
                 />
-              );
+              )
             })
           }
         </svg>
       </ReactSVGPanZoom>
     </Box>
-  );
+  )
 } // DrawDocument
 
 DrawDocument.propTypes = {
@@ -238,6 +239,6 @@ DrawDocument.propTypes = {
   entityOnClick: PropTypes.func,
   hilight: PropTypes.object,
   entities: PropTypes.array,
-};
+}
 
-export default DrawDocument;
+export default DrawDocument

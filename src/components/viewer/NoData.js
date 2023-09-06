@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 //import { useState, useEffect, useRef } from 'react';
-import { Paper, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material"
 
 /**
  * props
  * * data - The Document object from the JSON
  */
 
-function NoData(props) {
+function NoData() {
   return (
     <Paper sx={{ flexGrow: 1, padding: "20px" }}>
       <Typography variant="h4">No data.</Typography>
@@ -30,7 +30,7 @@ function NoData(props) {
         of a Document AI parse output.
       </Typography>
     </Paper>
-  );
+  )
 } // NoData
 
-export default NoData;
+export default NoData
