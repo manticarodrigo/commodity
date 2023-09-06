@@ -7,8 +7,7 @@ const handler = (request: Request) => {
     endpoint: "/api/trpc",
     req: request,
     router: appRouter,
-    createContext: function () // opts: FetchCreateContextFnOptions,
-    : object | Promise<object> {
+    createContext: function (): object | Promise<object> {
       return {}
     },
   })

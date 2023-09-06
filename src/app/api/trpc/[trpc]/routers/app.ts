@@ -1,21 +1,16 @@
 import { z } from "zod"
 
-import { processFile } from "@/app/api/ocr/service"
+import { processDocument } from "@/lib/google"
 
 import { createRouter, protectedProcedure } from "../trpc"
 
 export const appRouter = createRouter({
-  uploadFile: protectedProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        base64: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const result = await processFile(input.name, input.base64)
+  processDocument: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ input }) => {
+      const result = await processDocument(input)
 
-      console.log("result", !!result)
+      return JSON.parse(JSON.stringify(result)) as typeof result
     }),
 })
 
