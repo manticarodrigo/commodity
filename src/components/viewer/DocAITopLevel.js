@@ -94,9 +94,17 @@ export function DocAITopLevel() {
           flexDirection: "column",
         }}
       >
-        {tabValue === 0 && <DocAIView data={data} />}
-        {tabValue === 1 && <JSONPage data={data} />}
-        {tabValue === 2 && <Details data={data} />}
+        {mutation.isLoading ? (
+          <Typography variant="h6" style={{ flexGrow: 1 }}>
+            Loading...
+          </Typography>
+        ) : (
+          <>
+            {tabValue === 0 && <DocAIView data={data} />}
+            {tabValue === 1 && <JSONPage data={data} />}
+            {tabValue === 2 && <Details data={data} />}
+          </>
+        )}
       </Card>
       <AboutDialog open={aboutOpen} close={() => setAboutOpen(false)} />
     </Card>
