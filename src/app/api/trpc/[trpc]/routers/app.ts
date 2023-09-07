@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { processDocument } from "@/lib/google"
+import { processDocument, Response } from "@/lib/google"
 
 import { createRouter, protectedProcedure } from "../trpc"
 
@@ -10,7 +10,7 @@ export const appRouter = createRouter({
     .mutation(async ({ input }) => {
       const result = await processDocument(input)
 
-      return JSON.parse(JSON.stringify(result)) as typeof result
+      return JSON.parse(JSON.stringify(result)) as Response
     }),
 })
 

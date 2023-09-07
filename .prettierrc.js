@@ -13,6 +13,7 @@ module.exports = {
     "^types$",
     "^@/schema/(.*)$",
     "^@/lib/(.*)$",
+    "^@/fixtures/(.*)$",
     "^@/prompts/(.*)$",
     "^@/hooks/(.*)$",
     "^@/components/ui/(.*)$",
@@ -28,4 +29,4 @@ module.exports = {
   importOrderMergeDuplicateImports: true,
   importOrderCombineTypeAndValueImports: true,
   plugins: ["@ianvs/prettier-plugin-sort-imports"],
-};
+}

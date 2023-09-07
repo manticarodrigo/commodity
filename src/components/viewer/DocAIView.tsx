@@ -3,25 +3,23 @@ import { bufferToBase64 } from "@/utils/encoding"
 import { measureImage } from "@/utils/image"
 import { Box } from "@mui/material"
 
+import { Document, Entity } from "@/lib/google"
+
 import DrawDocument from "./DrawDocument"
-import EntityInfoDialog from "./EntityInfoDialog"
 import EntityList from "./EntityList"
 import NoData from "./NoData"
 import PageSelector from "./PageSelector"
 
-function DocAIView(props) {
-  const [hilight, setHilight] = useState(null)
-  const [entityInfoDialogOpen, setEntityInfoDialogOpen] = useState(false)
-  const [entityInfoDialogEntity, setEntityInfoDialogEntity] = useState(null)
+interface Props {
+  data: Document | null
+}
+
+function DocAIView(props: Props) {
+  const [hilight, setHilight] = useState<Entity | null>(null)
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
 
-  function entityOnClick(entity) {
+  function entityOnClick(entity: Entity) {
     setHilight(entity)
-  }
-
-  function onInfoClick(entity) {
-    setEntityInfoDialogOpen(true)
-    setEntityInfoDialogEntity(entity)
   }
 
   useEffect(() => {
@@ -43,12 +41,7 @@ function DocAIView(props) {
 
   return (
     <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
-      <EntityList
-        data={props.data}
-        onInfoClick={onInfoClick}
-        entityOnClick={entityOnClick}
-        hilight={hilight}
-      />
+      <EntityList data={props.data} />
       <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "row" }}>
         <Box sx={{ flexGrow: 1 }}>
           <DrawDocument
@@ -63,11 +56,6 @@ function DocAIView(props) {
           <PageSelector data={props.data}></PageSelector>
         </Box>
       </Box>
-      <EntityInfoDialog
-        open={entityInfoDialogOpen}
-        close={() => setEntityInfoDialogOpen(false)}
-        entity={entityInfoDialogEntity}
-      ></EntityInfoDialog>
     </Box>
   )
 }
