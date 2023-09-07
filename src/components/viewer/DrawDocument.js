@@ -1,45 +1,5 @@
-/**
- * Copyright 2023 Google LLC
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
- * Draw the document.
- *
- * Draw the document that is supplied by the imageData property.  The size of the image is
- * supplied by the imageSize property which is a {width, height}.
- *
- * In addition to drawing the image, the entities supplied in the entities property are
- * drawn as overlays on the image.
- *
- * From an implementation standpoint, we use the ReactSVGPanZoom module to act as a container for
- * the SVG.  This adds a wealth of goodies including pan and zoom.  Contained within we create
- * an SVG container that contains an SVG image use to display the document image.  We have a
- * helper React component called EntityHilight that draws a hilight around each of the entities
- * in the SVG.
- *
- * Possibly one of the trickiest things in this module is handling sizing of the SVG and the image.
- * We have two primary tricks.  The first is that a <Box> surrounds the whole thing.  We take
- * a reference of thise box and use a hook called useEffect() which is called after the DOM
- * renders.  At THAT point the <Box> is at its "final" size.  This allows us to know at THAT
- * point what the size of the containing area will be for the SVG.  When the component initially
- * rendered we set the size of the SVG to be (10,10) and saved that in state.  This is very
- * small.  When the DOM initiall renders and THEN we know the final size of the container, we
- * change the SVG size to fill the container.  This re-renders and now we are at full size.
- *
- * DocAIView is the primary consumer of this component.
- */
 import { useEffect, useRef, useState } from "react"
+import { imageScale } from "@/utils/image"
 import { Box } from "@mui/material"
 import PropTypes from "prop-types"
 import {
@@ -50,27 +10,6 @@ import {
 } from "react-svg-pan-zoom"
 
 import EntityHilight from "./EntityHilight"
-import { imageScale } from "./utils"
-
-/**
- * Props:
- * * imageData - The image data to show in the viewer
- * * imageSize - {width, height} of the image
- * * entityOnClick - A callback to be invoked when the entity is clicked
- * * hilight - The entity to hilight
- * * entities - The set of entities to display
- */
-
-/**
- * A debounce wrapper that calls the passed in function after a specified number
- * of milliseconds.  If the debouncer is called a second time berfore the timer
- * has fired, the original timer will be cancelled and a new one started.  This
- * means that if the debounced function is called repeatedly, only one instance
- * will be finally invoked
- * @param {*} fn The function to be called
- * @param {*} ms The number of milliseconds to pass before the function is called.
- * @returns N/A
- */
 
 let timer
 function debounce(fn, ms) {

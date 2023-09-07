@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { fileToString } from "@/utils/file"
 import HelpIcon from "@mui/icons-material/Help"
 import {
   AppBar,
@@ -12,6 +13,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material"
+import fixture from "public/output.json"
 
 import { trpc } from "@/lib/trpc"
 
@@ -22,7 +24,7 @@ import JSONPage from "./JSONPage"
 
 export function DocAITopLevel() {
   const [tabValue, setTabValue] = useState(0)
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(fixture.document)
   const [aboutOpen, setAboutOpen] = useState(false)
 
   const mutation = trpc.processDocument.useMutation()
@@ -31,26 +33,23 @@ export function DocAITopLevel() {
     setTabValue(newValue)
   }
 
-  function loadJson(event) {
+  async function loadJson(event) {
     if (event.target.files.length === 0) {
       setData(null)
       return
     }
 
-    const reader = new FileReader()
-    reader.onloadend = async () => {
-      const content = reader.result?.toString().split(",")[1]
-      mutation.mutate(content, {
-        onSuccess: (result) => {
-          if (result.hasOwnProperty("document")) {
-            setData(result.document)
-          } else {
-            setData(result)
-          }
-        },
-      })
-    }
-    reader.readAsDataURL(event.target.files[0])
+    const content = await fileToString(event.target.files[0])
+
+    mutation.mutate(content, {
+      onSuccess: (result) => {
+        if ("document" in result) {
+          setData(result.document)
+        } else {
+          setData(result)
+        }
+      },
+    })
   }
 
   return (
