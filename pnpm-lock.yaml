@@ -59,6 +59,9 @@ dependencies:
   '@types/react-dom':
     specifier: 18.2.7
     version: 18.2.7
+  '@types/react-svg-pan-zoom':
+    specifier: ^3.3.5
+    version: 3.3.5
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.6.0
     version: 6.6.0(@typescript-eslint/parser@6.5.0)(eslint@8.48.0)(typescript@5.2.2)
@@ -1284,6 +1287,12 @@ packages:
 
   /@types/react-is@18.2.1:
     resolution: {integrity: sha512-wyUkmaaSZEzFZivD8F2ftSyAfk6L+DfFliVj/mYdOXbVjRcS87fQJLTnhk6dRZPuJjI+9g6RZJO4PNCngUrmyw==}
+    dependencies:
+      '@types/react': 18.2.21
+    dev: false
+
+  /@types/react-svg-pan-zoom@3.3.5:
+    resolution: {integrity: sha512-W8GRFCDy7raSDr5OXGjSyvX5KmdWlIQfv0NLa1jfAYVUO4ClVbgorWeAAom7nY3Pl+4h9blXE1Bnu2CW1iMEvQ==}
     dependencies:
       '@types/react': 18.2.21
     dev: false
