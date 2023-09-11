@@ -11,11 +11,11 @@ interface Props {
   }
   onClick?: (entity: Entity) => void
   onMouseOver?: (entity: Entity) => void
-  hilight?: Entity
+  highlight: Entity | null
   entity: Entity
 }
 
-function EntityHilight(props: Props) {
+function EntityHighlight(props: Props) {
   let onMouseOverCallback: (event: MouseEvent) => void
   let onClickCallback: (event: MouseEvent) => void
   if (props.onClick) {
@@ -45,17 +45,17 @@ function EntityHilight(props: Props) {
     }
   })
 
-  let hilight = false
-  if (props.hilight) {
+  let highlight = false
+  if (props.highlight) {
     if (
-      typeof props.hilight === "string" &&
-      props.hilight === props.entity.id
+      typeof props.highlight === "string" &&
+      props.highlight === props.entity.id
     ) {
-      hilight = true
-    } else if (typeof props.hilight === "boolean") {
-      hilight = props.hilight
+      highlight = true
+    } else if (typeof props.highlight === "boolean") {
+      highlight = props.highlight
     } else {
-      hilight = props.entity.id === props.hilight.id
+      highlight = props.entity.id === props.highlight.id
     }
   }
   let points = ""
@@ -70,7 +70,7 @@ function EntityHilight(props: Props) {
     }
   )
   let fillColor = "yellow"
-  if (hilight) {
+  if (highlight) {
     fillColor = "blue"
   }
   return (
@@ -84,4 +84,4 @@ function EntityHilight(props: Props) {
   )
 }
 
-export default EntityHilight
+export default EntityHighlight

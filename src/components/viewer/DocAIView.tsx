@@ -15,11 +15,11 @@ interface Props {
 }
 
 function DocAIView(props: Props) {
-  const [hilight, setHilight] = useState<Entity | null>(null)
+  const [highlight, setHighlight] = useState<Entity | null>(null)
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
 
   function entityOnClick(entity: Entity) {
-    setHilight(entity)
+    setHighlight(entity)
   }
 
   useEffect(() => {
@@ -48,7 +48,7 @@ function DocAIView(props: Props) {
             imageData={imageData}
             imageSize={imageSize}
             entities={props.data.entities}
-            hilight={hilight}
+            highlight={highlight}
             entityOnClick={entityOnClick}
           />
         </Box>

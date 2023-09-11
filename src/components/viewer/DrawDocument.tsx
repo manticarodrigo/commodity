@@ -12,14 +12,14 @@ import { useDebouncedCallback } from "use-debounce"
 
 import { Entity } from "@/lib/google"
 
-import EntityHilight from "./EntityHilight"
+import EntityHighlight from "./EntityHighlight"
 
 interface Props {
   imageData: string
   imageSize: { width: number; height: number }
   entities: Entity[]
   entityOnClick: (entity: Entity) => void
-  hilight: string
+  highlight: Entity | null
 }
 
 const minSize = { width: 10, height: 10 }
@@ -145,12 +145,12 @@ function DrawDocument(props: Props) {
           />
           {props.entities.map((entity) => {
             return (
-              <EntityHilight
+              <EntityHighlight
                 key={entity.id}
                 imageSize={imageSizeSmaller}
                 entity={entity}
                 onClick={entityClick}
-                hilight={props.hilight}
+                highlight={props.highlight}
               />
             )
           })}
