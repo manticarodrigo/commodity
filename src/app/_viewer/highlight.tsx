@@ -15,7 +15,7 @@ interface Props {
   entity: Entity
 }
 
-function EntityHighlight(props: Props) {
+export function EntityHighlight(props: Props) {
   let onMouseOverCallback: (event: MouseEvent) => void
   let onClickCallback: (event: MouseEvent) => void
   if (props.onClick) {
@@ -83,5 +83,3 @@ function EntityHighlight(props: Props) {
     />
   )
 }
-
-export default EntityHighlight

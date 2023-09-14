@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react"
 import { imageScale } from "@/utils/image"
-import { Box } from "@mui/material"
 import {
   POSITION_NONE,
   ReactSVGPanZoom,
@@ -10,16 +9,12 @@ import {
 } from "react-svg-pan-zoom"
 import { useDebouncedCallback } from "use-debounce"
 
-import { Entity } from "@/lib/google"
-
-import EntityHighlight from "./EntityHighlight"
-
 interface Props {
   imageData: string
   imageSize: { width: number; height: number }
-  entities: Entity[]
-  entityOnClick: (entity: Entity) => void
-  highlight: Entity | null
+  children: (props: {
+    imageSize: { width: number; height: number; x: number; y: number }
+  }) => JSX.Element
 }
 
 const minSize = { width: 10, height: 10 }
@@ -45,7 +40,7 @@ const INITIAL_VALUE: Value = {
   miniatureOpen: false,
 }
 
-function DrawDocument(props: Props) {
+export function DrawDocument(props: Props) {
   const viewerRef = useRef<ReactSVGPanZoom>(null)
   const ref1 = useRef<HTMLDivElement>(null)
   const [tool, setTool] = useState<Tool>(TOOL_NONE)
@@ -68,25 +63,20 @@ function DrawDocument(props: Props) {
     }
   }, [svgContainerSize.width, svgContainerSize.height])
 
-  const debouncedHandleResize = useDebouncedCallback(function handleResize(
-    size
-  ) {
-    setSvgContainerSize(size)
+  const debouncedHandleResize = useDebouncedCallback(function handleResize() {
+    const width = ref1.current?.offsetWidth ?? minSize.width
+    const height = ref1.current?.offsetHeight ?? minSize.height
+    setSvgContainerSize({ width, height })
   }, 1000)
 
   useEffect(() => {
-    debouncedHandleResize(minSize)
+    debouncedHandleResize()
     window.addEventListener("resize", debouncedHandleResize)
     return () => {
       window.removeEventListener("resize", debouncedHandleResize)
     }
-  }, [minSize])
+  }, [])
 
-  function entityClick(entity: Entity) {
-    if (props.entityOnClick) {
-      props.entityOnClick(entity)
-    }
-  }
   const imageSize = imageScale(svgContainerSize, props.imageSize)
   const imageSizeSmaller = {
     width: Math.max(imageSize.width - 10, 0),
@@ -95,16 +85,9 @@ function DrawDocument(props: Props) {
     y: imageSize.y + 5,
   }
   return (
-    <Box
+    <div
       ref={ref1}
-      style={{
-        flexGrow: 1,
-        flexShrink: 1,
-        width: "100%",
-        height: "100%",
-        backgroundColor: "purple",
-        overflow: "hidden",
-      }}
+      className="h-full w-full shrink grow overflow-hidden bg-secondary"
     >
       <ReactSVGPanZoom
         ref={viewerRef}
@@ -143,21 +126,9 @@ function DrawDocument(props: Props) {
             y={imageSizeSmaller.y}
             href={`data:image/png;base64,${props.imageData}`}
           />
-          {props.entities.map((entity) => {
-            return (
-              <EntityHighlight
-                key={entity.id}
-                imageSize={imageSizeSmaller}
-                entity={entity}
-                onClick={entityClick}
-                highlight={props.highlight}
-              />
-            )
-          })}
+          {props.children({ imageSize: imageSizeSmaller })}
         </svg>
       </ReactSVGPanZoom>
-    </Box>
+    </div>
   )
 }
-
-export default DrawDocument

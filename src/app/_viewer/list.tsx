@@ -1,13 +1,12 @@
 import { Document } from "@/lib/google"
-import { Badge } from "@/components/ui/badge"
 
 interface Props {
   data: Document
 }
 
-function EntityList(props: Props) {
+export function EntityList(props: Props) {
   return (
-    <ul className="h-full w-72 divide-y overflow-y-auto">
+    <ul className="h-full w-96 divide-y overflow-y-auto">
       {props.data.entities
         .slice()
         .sort((a, b) => {
@@ -15,14 +14,17 @@ function EntityList(props: Props) {
           if (a.type < b.type) return -1
           return 0
         })
+        .filter((entity) => entity.mentionText)
         .map((entity) => {
           return (
-            <li key={entity.id} className="p-4">
+            <li key={entity.id} className="px-4 py-2">
               <div className="flex items-center justify-between">
-                <span className="font-medium">{entity.type}</span>{" "}
-                <Badge variant="outline">
+                <span className="font-medium capitalize">
+                  {entity.type.split("_").join(" ")}
+                </span>{" "}
+                {/* <Badge variant="outline">
                   {Math.round(entity.confidence * 100)}%
-                </Badge>
+                </Badge> */}
               </div>
               <div>{entity.mentionText}</div>
             </li>
@@ -31,5 +33,3 @@ function EntityList(props: Props) {
     </ul>
   )
 }
-
-export default EntityList

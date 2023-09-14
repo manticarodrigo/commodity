@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { bufferToBase64 } from "@/utils/encoding"
-import { Box, Tab, Tabs } from "@mui/material"
+import { Tab, Tabs } from "@mui/material"
 
 import { Document } from "@/lib/google"
 
@@ -11,7 +11,7 @@ interface Props {
   onPageChange?: (pageNumber: number) => void
 }
 
-function PageSelector(props: Props) {
+export function PageSelector(props: Props) {
   const [value, setValue] = useState(0)
 
   function pageChange(pageNumber: number) {
@@ -40,7 +40,7 @@ function PageSelector(props: Props) {
           page.image?.content?.data
         )}`
         const labelNode = (
-          <Box>
+          <div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageData}
@@ -49,12 +49,10 @@ function PageSelector(props: Props) {
             />
             <br />
             {page.pageNumber}
-          </Box>
+          </div>
         )
         return <Tab key={index} label={labelNode} />
       })}
     </Tabs>
   )
 }
-
-export default PageSelector
