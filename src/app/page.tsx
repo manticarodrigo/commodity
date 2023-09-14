@@ -76,7 +76,7 @@ export default function RootPage() {
         <label>
           <input
             className="hidden"
-            accept=".json"
+            accept=".pdf"
             type="file"
             onChange={loadFile}
           />

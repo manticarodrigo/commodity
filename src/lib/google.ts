@@ -29,6 +29,8 @@ export async function processDocument(content: string) {
 
   const [result] = await client.processDocument(request)
 
+  // await promises.writeFile("src/fixtures/output.json", JSON.stringify(result))
+
   return result
 }
 
