@@ -4,7 +4,7 @@ import DocumentAI from "@google-cloud/documentai"
 const { DocumentProcessorServiceClient } = DocumentAI.v1
 
 const projectId = "896559694339"
-const processorId = "99eeb3da01c05ed9"
+const processorId = "929ba35e991edc07"
 
 const client = new DocumentProcessorServiceClient({
   apiEndpoint: "us-documentai.googleapis.com",
