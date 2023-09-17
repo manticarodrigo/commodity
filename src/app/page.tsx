@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import Image from "next/image"
 import { bufferToBase64 } from "@/utils/encoding"
 import { fileToString } from "@/utils/file"
 import { measureImage } from "@/utils/image"
@@ -21,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { ModeToggle } from "@/components/mode-toggle"
 import { ViewerDoc } from "@/components/viewer/doc"
 import { ViewerEntityHighlight } from "@/components/viewer/highlight"
 import { ViewerEntityList } from "@/components/viewer/list"
@@ -74,32 +74,29 @@ export default function RootPage() {
     <div className="flex h-full w-full flex-col">
       <header className="flex items-center border-b px-4 py-2">
         <div className="grow">
-          <Image
-            alt=""
-            src="/pantaleon.jpg"
-            width={468}
-            height={177}
-            className="h-[40px] w-[105px] object-contain"
-          />
+          <h1 className="font-mono">commodity.ai</h1>
         </div>
-        <label>
-          <input
-            className="hidden"
-            accept=".pdf"
-            type="file"
-            onChange={loadFile}
-          />
-          <Button
-            asChild
-            variant="outline"
-            size="icon"
-            className="cursor-pointer"
-          >
-            <span>
-              <Upload className="h-4 w-4" />
-            </span>
-          </Button>
-        </label>
+        <div className="flex items-center gap-2">
+          <ModeToggle />
+          <label>
+            <input
+              className="hidden"
+              accept=".pdf"
+              type="file"
+              onChange={loadFile}
+            />
+            <Button
+              asChild
+              variant="outline"
+              size="icon"
+              className="cursor-pointer"
+            >
+              <span>
+                <Upload className="h-4 w-4" />
+              </span>
+            </Button>
+          </label>
+        </div>
       </header>
       {mutation.isLoading ? (
         <div className="p-4">
