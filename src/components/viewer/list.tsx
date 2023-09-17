@@ -4,19 +4,8 @@ import { CheckedState } from "@radix-ui/react-checkbox"
 import { Document, Entity } from "@/lib/google"
 import { cn } from "@/lib/utils"
 
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
-
-interface Props {
-  data: Document
-}
 
 const ENTITY_TYPES = {
   CUSTOMER_ORDER_ADDITIONAL_SHIPPER_INFO:
@@ -118,6 +107,11 @@ const cardGroups = [
 
 type CheckboxRecord = { [x: string]: CheckedState }
 
+interface Props {
+  edit: boolean
+  data: Document
+}
+
 export function ViewerEntityList(props: Props) {
   const [selectedGroups, setSelectedGroups] = useState<CheckboxRecord>(
     cardGroups.reduce((acc, group) => {
@@ -146,17 +140,36 @@ export function ViewerEntityList(props: Props) {
       {cardGroups.map(function (group, index) {
         return (
           <Card key={index} className="w-full border">
-            <CardHeader className="relative border-b bg-secondary">
+            <CardHeader className="relative border-b py-3">
               <label className="flex gap-2">
-                <Checkbox
-                  checked={selectedGroups[group.prefix]}
-                  onCheckedChange={(checked) => {
-                    setSelectedGroups({
-                      ...selectedGroups,
-                      [group.prefix]: checked,
-                    })
-                  }}
-                />
+                {props.edit && (
+                  <Checkbox
+                    checked={selectedGroups[group.prefix]}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSelectedEntities({
+                          ...selectedEntities,
+                          ...group.fields.reduce((acc, field) => {
+                            acc[field] = true
+                            return acc
+                          }, {} as CheckboxRecord),
+                        })
+                      } else {
+                        setSelectedEntities({
+                          ...selectedEntities,
+                          ...group.fields.reduce((acc, field) => {
+                            acc[field] = false
+                            return acc
+                          }, {} as CheckboxRecord),
+                        })
+                      }
+                      setSelectedGroups({
+                        ...selectedGroups,
+                        [group.prefix]: checked,
+                      })
+                    }}
+                  />
+                )}
                 <CardTitle className="text-sm">{group.title}</CardTitle>
               </label>
             </CardHeader>
@@ -171,15 +184,17 @@ export function ViewerEntityList(props: Props) {
                   return (
                     <li key={field}>
                       <label className="flex gap-2">
-                        <Checkbox
-                          checked={selectedEntities[field]}
-                          onCheckedChange={(checked) => {
-                            setSelectedEntities({
-                              ...selectedEntities,
-                              [field]: checked,
-                            })
-                          }}
-                        />
+                        {props.edit && (
+                          <Checkbox
+                            checked={selectedEntities[field]}
+                            onCheckedChange={(checked) => {
+                              setSelectedEntities({
+                                ...selectedEntities,
+                                [field]: checked,
+                              })
+                            }}
+                          />
+                        )}
                         <div className="flex flex-col">
                           <h2 className="order-2 break-words font-mono text-xs text-muted-foreground">
                             {field
@@ -203,38 +218,6 @@ export function ViewerEntityList(props: Props) {
                 })}
               </ul>
             </CardContent>
-            <CardFooter className="flex gap-2">
-              <Button
-                variant="link"
-                className="h-auto p-0"
-                onClick={() => {
-                  setSelectedEntities({
-                    ...selectedEntities,
-                    ...group.fields.reduce((acc, field) => {
-                      acc[field] = true
-                      return acc
-                    }, {} as CheckboxRecord),
-                  })
-                }}
-              >
-                Select all
-              </Button>
-              <Button
-                variant="link"
-                className="h-auto p-0"
-                onClick={() => {
-                  setSelectedEntities({
-                    ...selectedEntities,
-                    ...group.fields.reduce((acc, field) => {
-                      acc[field] = false
-                      return acc
-                    }, {} as CheckboxRecord),
-                  })
-                }}
-              >
-                Clear all
-              </Button>
-            </CardFooter>
           </Card>
         )
       })}

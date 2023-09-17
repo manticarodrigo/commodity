@@ -5,7 +5,7 @@ import Image from "next/image"
 import { bufferToBase64 } from "@/utils/encoding"
 import { fileToString } from "@/utils/file"
 import { measureImage } from "@/utils/image"
-import { FileText, Upload } from "lucide-react"
+import { Edit, FileText, Lock, Upload } from "lucide-react"
 
 import { Document, Entity } from "@/lib/google"
 import { trpc } from "@/lib/trpc"
@@ -27,6 +27,7 @@ import { ViewerEntityList } from "@/components/viewer/list"
 import { ViewerPagination } from "@/components/viewer/pagination"
 
 export default function RootPage() {
+  const [edit, setEdit] = useState(false)
   const [data, setData] = useState<Document | null>(fixture.document)
   const [highlight, setHighlight] = useState<Entity | null>(null)
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
@@ -111,10 +112,10 @@ export default function RootPage() {
         </div>
       ) : (
         <div className="flex h-full min-h-0">
-          <div className="w-full overflow-y-auto p-2 lg:h-full lg:w-1/3 lg:min-w-[500px]">
-            <div>
+          <div className="w-full overflow-y-auto bg-accent p-2 lg:h-full lg:w-1/3 lg:min-w-[500px]">
+            <div className="mb-2 flex gap-2">
               <Select value="bol">
-                <SelectTrigger className="mb-2 w-full">
+                <SelectTrigger className="w-full min-w-0">
                   <span className="inline-flex items-center">
                     <FileText className="mr-2 h-4 w-4" />
                     <SelectValue placeholder="Select a document processor" />
@@ -132,8 +133,20 @@ export default function RootPage() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              <Button
+                variant="outline"
+                className="shrink-0"
+                onClick={() => setEdit(!edit)}
+              >
+                {edit ? (
+                  <Lock className="mr-2 h-4 w-4" />
+                ) : (
+                  <Edit className="mr-2 h-4 w-4" />
+                )}
+                {edit ? "Lock" : "Edit"} fields
+              </Button>
             </div>
-            <ViewerEntityList data={data} />
+            <ViewerEntityList edit={edit} data={data} />
           </div>
           <div className="relative flex w-full grow flex-col lg:h-full">
             <ViewerDoc imageData={imageData} imageSize={imageSize}>

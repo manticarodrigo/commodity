@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react"
 
 import { Entity } from "@/lib/google"
+import { cn } from "@/lib/utils"
 
 interface Props {
   imageSize: {
@@ -69,17 +70,17 @@ export function ViewerEntityHighlight(props: Props) {
       }`
     }
   )
-  let fillColor = "yellow"
-  if (highlight) {
-    fillColor = "blue"
-  }
   return (
     <polygon
       ref={polygon}
       points={points}
       fillOpacity="0.1"
-      stroke="blue"
-      fill={fillColor}
+      className={cn(
+        "cursor-pointer",
+        highlight
+          ? "stroke-fuchsia-500 fill-fuchsia-500"
+          : "stroke-violet-500 fill-violet-500"
+      )}
     />
   )
 }
