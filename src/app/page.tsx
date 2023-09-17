@@ -109,7 +109,7 @@ export default function RootPage() {
         </div>
       ) : (
         <div className="flex h-full min-h-0">
-          <div className="w-full overflow-y-auto bg-accent p-2 lg:h-full lg:w-1/3 lg:min-w-[500px]">
+          <div className="w-full overflow-y-auto p-2 lg:h-full lg:w-1/3 lg:min-w-[500px]">
             <div className="mb-2 flex gap-2">
               <Select value="bol">
                 <SelectTrigger className="w-full min-w-0">
@@ -131,7 +131,7 @@ export default function RootPage() {
                 </SelectContent>
               </Select>
               <Button
-                variant="outline"
+                variant="secondary"
                 className="shrink-0"
                 onClick={() => setEdit(!edit)}
               >

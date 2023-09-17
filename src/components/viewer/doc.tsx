@@ -1,13 +1,10 @@
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { imageScale } from "@/utils/image"
-import {
-  POSITION_NONE,
-  ReactSVGPanZoom,
-  Tool,
-  TOOL_NONE,
-  Value,
-} from "react-svg-pan-zoom"
+import { Maximize, ZoomIn, ZoomOut } from "lucide-react"
+import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch"
 import { useDebouncedCallback } from "use-debounce"
+
+import { Button } from "@/components/ui/button"
 
 interface Props {
   imageData: string
@@ -17,46 +14,16 @@ interface Props {
   }) => React.ReactNode
 }
 
-const minSize = { width: 10, height: 10 }
-
-const INITIAL_VALUE: Value = {
-  version: 2,
-  mode: "idle",
-  focus: false,
-  a: 1,
-  b: 0,
-  c: 0,
-  d: 1,
-  e: 0,
-  f: 0,
-  viewerWidth: 0,
-  viewerHeight: 0,
-  SVGWidth: 0,
-  SVGHeight: 0,
-  startX: 0,
-  startY: 0,
-  endX: 0,
-  endY: 0,
-  miniatureOpen: false,
-}
+const minSize = { width: 0, height: 0 }
 
 export function ViewerDoc(props: Props) {
-  const viewerRef = useRef<ReactSVGPanZoom>(null)
-  const ref1 = useRef<HTMLDivElement>(null)
-  const [tool, setTool] = useState<Tool>(TOOL_NONE)
-  const [value, setValue] = useState(INITIAL_VALUE)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [svgContainerSize, setSvgContainerSize] = useState(minSize)
 
   useEffect(() => {
-    if (viewerRef.current) {
-      viewerRef.current.fitToViewer()
-    }
-  }, [])
-
-  useEffect(() => {
-    if (ref1.current) {
-      const w = ref1.current.offsetWidth
-      const h = ref1.current.offsetHeight
+    if (containerRef.current) {
+      const w = containerRef.current.offsetWidth
+      const h = containerRef.current.offsetHeight
       if (w !== svgContainerSize.width || h !== svgContainerSize.height) {
         setSvgContainerSize({ width: w, height: h })
       }
@@ -64,8 +31,8 @@ export function ViewerDoc(props: Props) {
   }, [svgContainerSize.width, svgContainerSize.height])
 
   const debouncedHandleResize = useDebouncedCallback(function handleResize() {
-    const width = ref1.current?.offsetWidth ?? minSize.width
-    const height = ref1.current?.offsetHeight ?? minSize.height
+    const width = containerRef.current?.offsetWidth ?? minSize.width
+    const height = containerRef.current?.offsetHeight ?? minSize.height
     setSvgContainerSize({ width, height })
   }, 1000)
 
@@ -78,57 +45,59 @@ export function ViewerDoc(props: Props) {
   }, [])
 
   const imageSize = imageScale(svgContainerSize, props.imageSize)
-  const imageSizeSmaller = {
-    width: Math.max(imageSize.width - 10, 0),
-    height: Math.max(imageSize.height - 10, 0),
-    x: imageSize.x + 5,
-    y: imageSize.y + 5,
-  }
+
   return (
     <div
-      ref={ref1}
-      className="h-full w-full shrink grow overflow-hidden bg-secondary"
+      ref={containerRef}
+      className="flex h-full w-full shrink grow items-center justify-center bg-foreground/50"
     >
-      <ReactSVGPanZoom
-        ref={viewerRef}
-        miniatureProps={{
-          position: POSITION_NONE,
-          background: "none",
-          width: 0,
-          height: 0,
-        }}
-        SVGBackground="none"
-        detectAutoPan={false}
-        width={svgContainerSize.width}
-        height={svgContainerSize.height}
-        tool={tool}
-        onChangeTool={setTool}
-        value={value}
-        onChangeValue={setValue}
-        onClick={(event) =>
-          console.log("click", event.x, event.y, event.originalEvent)
-        }
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width={imageSize.width}
-          height={imageSize.height}
-          style={{
-            borderColor: "lightgrey",
-            borderStyle: "solid",
-            borderWidth: "1px",
-          }}
-        >
-          <image
-            width={imageSizeSmaller.width}
-            height={imageSizeSmaller.height}
-            x={imageSizeSmaller.x}
-            y={imageSizeSmaller.y}
-            href={`data:image/png;base64,${props.imageData}`}
-          />
-          {props.children({ imageSize: imageSizeSmaller })}
-        </svg>
-      </ReactSVGPanZoom>
+      {!!(svgContainerSize.width && svgContainerSize.height) && (
+        <TransformWrapper limitToBounds={false}>
+          {({ zoomIn, zoomOut, resetTransform }) => (
+            <React.Fragment>
+              <div className="absolute right-2 top-2 z-10 flex flex-col gap-2">
+                <Button variant="outline" size="icon" onClick={() => zoomIn()}>
+                  <ZoomIn className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" onClick={() => zoomOut()}>
+                  <ZoomOut className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => resetTransform()}
+                >
+                  <Maximize className="h-4 w-4" />
+                </Button>
+              </div>
+              <TransformComponent>
+                <div
+                  className="flex cursor-move items-center justify-center"
+                  style={{
+                    width: svgContainerSize.width,
+                    height: svgContainerSize.height,
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={imageSize.width}
+                    height={imageSize.height}
+                  >
+                    <image
+                      width={imageSize.width}
+                      height={imageSize.height}
+                      href={`data:image/png;base64,${props.imageData}`}
+                    />
+                    {props.children({
+                      imageSize: { ...imageSize, x: 0, y: 0 },
+                    })}
+                  </svg>
+                </div>
+              </TransformComponent>
+            </React.Fragment>
+          )}
+        </TransformWrapper>
+      )}
     </div>
   )
 }

@@ -140,7 +140,7 @@ export function ViewerEntityList(props: Props) {
       {cardGroups.map(function (group, index) {
         return (
           <Card key={index} className="w-full border">
-            <CardHeader className="relative border-b py-3">
+            <CardHeader className="relative">
               <label className="flex gap-2">
                 {props.edit && (
                   <Checkbox
