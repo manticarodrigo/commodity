@@ -5,7 +5,7 @@ import Image from "next/image"
 import { bufferToBase64 } from "@/utils/encoding"
 import { fileToString } from "@/utils/file"
 import { measureImage } from "@/utils/image"
-import { Upload } from "lucide-react"
+import { FileText, Upload } from "lucide-react"
 
 import { Document, Entity } from "@/lib/google"
 import { trpc } from "@/lib/trpc"
@@ -13,10 +13,18 @@ import { trpc } from "@/lib/trpc"
 import fixture from "@/fixtures/output.json"
 
 import { Button } from "@/components/ui/button"
-import { DrawDocument } from "@/components/viewer/doc"
-import { EntityHighlight } from "@/components/viewer/highlight"
-import { PageSelector } from "@/components/viewer/page-selector"
-import { EntityTable } from "@/components/viewer/table"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { ViewerDoc } from "@/components/viewer/doc"
+import { ViewerEntityHighlight } from "@/components/viewer/highlight"
+import { ViewerEntityList } from "@/components/viewer/list"
+import { ViewerPagination } from "@/components/viewer/pagination"
 
 export default function RootPage() {
   const [data, setData] = useState<Document | null>(fixture.document)
@@ -64,7 +72,6 @@ export default function RootPage() {
   return (
     <div className="flex h-full w-full flex-col">
       <header className="flex items-center border-b px-4 py-2">
-        {/* <h1 className="grow font-bold">CommodityAI</h1> */}
         <div className="grow">
           <Image
             alt=""
@@ -81,10 +88,14 @@ export default function RootPage() {
             type="file"
             onChange={loadFile}
           />
-          <Button asChild variant="outline" className="cursor-pointer">
+          <Button
+            asChild
+            variant="outline"
+            size="icon"
+            className="cursor-pointer"
+          >
             <span>
-              <Upload className="mr-2 h-4 w-4" />
-              Upload document
+              <Upload className="h-4 w-4" />
             </span>
           </Button>
         </label>
@@ -100,30 +111,51 @@ export default function RootPage() {
         </div>
       ) : (
         <div className="flex h-full min-h-0">
-          <div className="h-full w-[500px] overflow-y-auto">
-            <EntityTable data={data} />
-          </div>
-          <div className="flex grow">
-            <div className="grow">
-              <DrawDocument imageData={imageData} imageSize={imageSize}>
-                {({ imageSize }) => {
-                  return (
-                    <>
-                      {data.entities.map((entity) => (
-                        <EntityHighlight
-                          key={entity.id}
-                          entity={entity}
-                          imageSize={imageSize}
-                          highlight={highlight}
-                          onClick={onClickEntity}
-                        />
-                      ))}
-                    </>
-                  )
-                }}
-              </DrawDocument>
+          <div className="w-full overflow-y-auto p-2 lg:h-full lg:w-1/3 lg:min-w-[500px]">
+            <div>
+              <Select value="bol">
+                <SelectTrigger className="mb-2 w-full">
+                  <span className="inline-flex items-center">
+                    <FileText className="mr-2 h-4 w-4" />
+                    <SelectValue placeholder="Select a document processor" />
+                  </span>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="bol">Bill of lading</SelectItem>
+                    <SelectItem disabled value="contract">
+                      Contract
+                    </SelectItem>
+                    <SelectItem disabled value="invoice">
+                      Invoice
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
-            <PageSelector data={data}></PageSelector>
+            <ViewerEntityList data={data} />
+          </div>
+          <div className="relative flex w-full grow flex-col lg:h-full">
+            <ViewerDoc imageData={imageData} imageSize={imageSize}>
+              {({ imageSize }) => {
+                return (
+                  <React.Fragment>
+                    {data.entities.map((entity) => (
+                      <ViewerEntityHighlight
+                        key={entity.id}
+                        entity={entity}
+                        imageSize={imageSize}
+                        highlight={highlight}
+                        onClick={onClickEntity}
+                      />
+                    ))}
+                  </React.Fragment>
+                )
+              }}
+            </ViewerDoc>
+            <div className="absolute bottom-0 left-0 w-full">
+              <ViewerPagination data={data}></ViewerPagination>
+            </div>
           </div>
         </div>
       )}

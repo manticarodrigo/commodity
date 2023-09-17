@@ -55,20 +55,20 @@ export interface Document {
 }
 
 export interface Entity {
-  properties: Property[]
-  textAnchor: TextAnchor | null
+  properties: any[]
+  textAnchor: TextAnchor
   type: string
   mentionText: string
   mentionId: string
   confidence: number
   pageAnchor: PageAnchor
   id: string
-  normalizedValue: EntityNormalizedValue | null
+  normalizedValue: NormalizedValue | null
   provenance: null
   redacted: boolean
 }
 
-export interface EntityNormalizedValue {
+export interface NormalizedValue {
   text: string
   dateValue?: DateValue
   structuredValue?: string
@@ -86,9 +86,9 @@ export interface PageAnchor {
 
 export interface PageRef {
   page: string
-  layoutType: LayoutType
+  layoutType: string
   layoutId: string
-  boundingPoly: BoundingPoly | null
+  boundingPoly: BoundingPoly
   confidence: number
 }
 
@@ -100,26 +100,6 @@ export interface BoundingPoly {
 export interface Vertex {
   x: number
   y: number
-}
-
-export type LayoutType = string
-
-export interface Property {
-  properties: any[]
-  textAnchor: TextAnchor
-  type: string
-  mentionText: string
-  mentionId: string
-  confidence: number
-  pageAnchor: PageAnchor
-  id: string
-  normalizedValue: PropertyNormalizedValue | null
-  provenance: null
-  redacted: boolean
-}
-
-export interface PropertyNormalizedValue {
-  text: string
 }
 
 export interface TextAnchor {
@@ -138,7 +118,7 @@ export interface Page {
   paragraphs: Block[]
   lines: Block[]
   tokens: Token[]
-  visualElements: any[]
+  visualElements: VisualElement[]
   tables: any[]
   formFields: any[]
   symbols: any[]
@@ -166,11 +146,13 @@ export interface DetectedLanguage {
 export type LanguageCode = string
 
 export interface Layout {
-  textAnchor: TextAnchor
+  textAnchor: TextAnchor | null
   confidence: number
   boundingPoly: BoundingPoly
-  orientation: string
+  orientation: Orientation
 }
+
+export type Orientation = string
 
 export interface Dimension {
   width: number
@@ -199,6 +181,14 @@ export interface Token {
 }
 
 export interface DetectedBreak {
+  type: DetectedBreakType
+}
+
+export type DetectedBreakType = string
+
+export interface VisualElement {
+  detectedLanguages: any[]
+  layout: Layout
   type: string
 }
 
@@ -206,4 +196,40 @@ export interface HumanReviewStatus {
   state: string
   stateMessage: string
   humanReviewOperation: string
+}
+
+export const ENTITY_TYPES = {
+  CUSTOMER_ORDER_ADDITIONAL_SHIPPER_INFO:
+    "customer_order_additional_shipper_info",
+  CUSTOMER_ORDER_COD: "customer_order_cod",
+  CUSTOMER_ORDER_DESCRIPTION: "customer_order_description",
+  CUSTOMER_ORDER_NUMBER: "customer_order_number",
+  CUSTOMER_ORDER_PACKAGE_NUMBER: "customer_order_package_number",
+  CUSTOMER_ORDER_PACKAGE_TYPE: "customer_order_package_type",
+  CUSTOMER_ORDER_TYPE: "customer_order_type",
+  CUSTOMER_ORDER_WEIGHT: "customer_order_weight",
+  DOCUMENT_DATE: "document_date",
+  DOCUMENT_NUMBER: "document_number",
+  FREIGHT_BILL_TO_ADDRESS: "freight_bill_to_address",
+  FREIGHT_BILL_TO_CITY: "freight_bill_to_city",
+  FREIGHT_BILL_TO_COUNTRY: "freight_bill_to_country",
+  FREIGHT_BILL_TO_NAME: "freight_bill_to_name",
+  FREIGHT_BILL_TO_STATE: "freight_bill_to_state",
+  FREIGHT_BILL_TO_ZIP: "freight_bill_to_zip",
+  FREIGHT_CARRIER_ALPHA_CODE: "freight_carrier_alpha_code",
+  FREIGHT_CARRIER_NAME: "freight_carrier_name",
+  FREIGHT_CHARGE_TERMS_COLLECT: "freight_charge_terms_collect",
+  SHIP_FROM_ADDRESS: "ship_from_address",
+  SHIP_FROM_CITY: "ship_from_city",
+  SHIP_FROM_NAME: "ship_from_name",
+  SHIP_FROM_SID: "ship_from_sid",
+  SHIP_FROM_STATE: "ship_from_state",
+  SHIP_FROM_ZIP: "ship_from_zip",
+  SHIP_TO_ADDRESS: "ship_to_address",
+  SHIP_TO_CID: "ship_to_cid",
+  SHIP_TO_CITY: "ship_to_city",
+  SHIP_TO_COUNTRY: "ship_to_country",
+  SHIP_TO_NAME: "ship_to_name",
+  SHIP_TO_STATE: "ship_to_state",
+  SHIP_TO_ZIP: "ship_to_zip",
 }

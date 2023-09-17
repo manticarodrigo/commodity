@@ -14,7 +14,7 @@ interface Props {
   imageSize: { width: number; height: number }
   children: (props: {
     imageSize: { width: number; height: number; x: number; y: number }
-  }) => JSX.Element
+  }) => React.ReactNode
 }
 
 const minSize = { width: 10, height: 10 }
@@ -40,7 +40,7 @@ const INITIAL_VALUE: Value = {
   miniatureOpen: false,
 }
 
-export function DrawDocument(props: Props) {
+export function ViewerDoc(props: Props) {
   const viewerRef = useRef<ReactSVGPanZoom>(null)
   const ref1 = useRef<HTMLDivElement>(null)
   const [tool, setTool] = useState<Tool>(TOOL_NONE)

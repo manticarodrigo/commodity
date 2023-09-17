@@ -15,7 +15,7 @@ interface Props {
   entity: Entity
 }
 
-export function EntityHighlight(props: Props) {
+export function ViewerEntityHighlight(props: Props) {
   let onMouseOverCallback: (event: MouseEvent) => void
   let onClickCallback: (event: MouseEvent) => void
   if (props.onClick) {

@@ -11,7 +11,7 @@ interface Props {
   onPageChange?: (pageNumber: number) => void
 }
 
-export function PageSelector(props: Props) {
+export function ViewerPagination(props: Props) {
   const [value, setValue] = useState(0)
 
   function pageChange(pageNumber: number) {
@@ -22,28 +22,28 @@ export function PageSelector(props: Props) {
   }
 
   return (
-    <ol className="flex flex-col bg-gray-300">
+    <ol className="flex gap-2 bg-gradient-to-t from-slate-950/50 via-slate-900/50">
       {props.data.pages?.map((page, index) => {
         const imageData = `data:image/png;base64,${bufferToBase64(
           page.image?.content?.data
         )}`
         return (
           <li key={index} className="p-2">
-            <Button
-              variant="ghost"
+            <div
               className={cn(
-                "px-2 h-auto",
-                index === value ? "bg-secondary" : ""
+                "p-2 rounded",
+                index === value ? "bg-slate-950/50" : ""
               )}
-              onClick={() => pageChange(index)}
             >
-              <div className="">
+              <Button
+                variant="ghost"
+                className={"h-auto rounded px-2 hover:bg-slate-500/50"}
+                onClick={() => pageChange(index)}
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={imageData} className="w-32 border" alt="page" />
-                <br />
-                {page.pageNumber}
-              </div>
-            </Button>
+                <img src={imageData} className="w-16 border" alt="page" />
+              </Button>
+            </div>
           </li>
         )
       })}
