@@ -9,13 +9,14 @@ import { Upload } from "lucide-react"
 
 import { Document, Entity } from "@/lib/google"
 import { trpc } from "@/lib/trpc"
-import fixture from "@/fixtures/output.json"
-import { Button } from "@/components/ui/button"
 
-import { DrawDocument } from "./_viewer/doc"
-import { EntityHighlight } from "./_viewer/highlight"
-import { EntityList } from "./_viewer/list"
-import { PageSelector } from "./_viewer/page-selector"
+import fixture from "@/fixtures/output.json"
+
+import { Button } from "@/components/ui/button"
+import { DrawDocument } from "@/components/viewer/doc"
+import { EntityHighlight } from "@/components/viewer/highlight"
+import { PageSelector } from "@/components/viewer/page-selector"
+import { EntityTable } from "@/components/viewer/table"
 
 export default function RootPage() {
   const [data, setData] = useState<Document | null>(fixture.document)
@@ -99,7 +100,9 @@ export default function RootPage() {
         </div>
       ) : (
         <div className="flex h-full min-h-0">
-          <EntityList data={data} />
+          <div className="h-full w-[500px] overflow-y-auto">
+            <EntityTable data={data} />
+          </div>
           <div className="flex grow">
             <div className="grow">
               <DrawDocument imageData={imageData} imageSize={imageSize}>
