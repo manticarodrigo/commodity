@@ -14,10 +14,10 @@ import fixture from "@/fixtures/output.json"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
-import { DocumentViewerCanvas } from "@/components/document/canvas"
-import { DocumentViewerEntityHighlight } from "@/components/document/highlight"
-import { DocumentViewerPagination } from "@/components/document/pagination"
-import { EntityListPane } from "@/components/list/pane"
+import { DocumentCanvas } from "@/components/document/canvas"
+import { DocumentHighlight } from "@/components/document/highlight"
+import { DocumentPagination } from "@/components/document/pagination"
+import { EntityPane } from "@/components/entity/pane"
 import { ModeToggle } from "@/components/mode-toggle"
 
 export default function RootPage() {
@@ -91,7 +91,7 @@ export default function RootPage() {
               className="w-[500px] max-w-full overflow-y-auto px-4 pt-12 sm:max-w-full lg:hidden"
               side="left"
             >
-              <EntityListPane
+              <EntityPane
                 data={data}
                 edit={edit}
                 onClickEdit={() => setEdit(!edit)}
@@ -121,19 +121,19 @@ export default function RootPage() {
       ) : (
         <div className="relative flex h-full min-h-0 w-full flex-col lg:flex-row">
           <div className="hidden h-full w-[500px] shrink-0 overflow-y-auto p-4 lg:block">
-            <EntityListPane
+            <EntityPane
               data={data}
               edit={edit}
               onClickEdit={() => setEdit(!edit)}
             />
           </div>
           <div className="relative flex h-full w-full min-w-0 flex-col">
-            <DocumentViewerCanvas imageData={imageData} imageSize={imageSize}>
+            <DocumentCanvas imageData={imageData} imageSize={imageSize}>
               {({ imageSize }) => {
                 return (
                   <React.Fragment>
                     {data.entities.map((entity) => (
-                      <DocumentViewerEntityHighlight
+                      <DocumentHighlight
                         key={entity.id}
                         entity={entity}
                         imageSize={imageSize}
@@ -144,9 +144,9 @@ export default function RootPage() {
                   </React.Fragment>
                 )
               }}
-            </DocumentViewerCanvas>
+            </DocumentCanvas>
             <div className="absolute bottom-0 left-0 w-full">
-              <DocumentViewerPagination data={data}></DocumentViewerPagination>
+              <DocumentPagination data={data}></DocumentPagination>
             </div>
           </div>
         </div>

@@ -16,7 +16,7 @@ interface Props {
 
 const minSize = { width: 0, height: 0 }
 
-export function DocumentViewerCanvas(props: Props) {
+export function DocumentCanvas(props: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [svgContainerSize, setSvgContainerSize] = useState(minSize)
 
@@ -53,7 +53,7 @@ export function DocumentViewerCanvas(props: Props) {
         <TransformWrapper limitToBounds={false}>
           {({ zoomIn, zoomOut, resetTransform }) => (
             <React.Fragment>
-              <div className="absolute right-2 top-2 z-10 flex flex-col gap-2">
+              <div className="absolute right-4 top-4 z-10 flex flex-col gap-2">
                 <Button variant="outline" size="icon" onClick={() => zoomIn()}>
                   <ZoomIn className="h-4 w-4" />
                 </Button>

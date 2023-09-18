@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { EntityList } from "@/components/list/list"
+import { EntityList } from "@/components/entity/list"
 
 interface Props {
   data: Document | null
@@ -43,7 +43,7 @@ export function DocumentSelect() {
   )
 }
 
-export function EntityListPane(props: Props) {
+export function EntityPane(props: Props) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4">

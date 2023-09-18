@@ -12,7 +12,7 @@ interface Props {
   onPageChange?: (pageNumber: number) => void
 }
 
-export function DocumentViewerPagination(props: Props) {
+export function DocumentPagination(props: Props) {
   const [value, setValue] = useState(0)
 
   function pageChange(pageNumber: number) {
@@ -23,13 +23,13 @@ export function DocumentViewerPagination(props: Props) {
   }
 
   return (
-    <ol className="flex gap-2 bg-gradient-to-t from-secondary/50 via-secondary/25">
+    <ol className="flex gap-4 bg-gradient-to-t from-secondary/50 via-secondary/25 p-4">
       {props.data.pages?.map((page, index) => {
         const imageData = `data:image/png;base64,${bufferToBase64(
           page.image?.content?.data
         )}`
         return (
-          <li key={index} className="flex flex-col justify-center gap-2 p-2">
+          <li key={index} className="flex flex-col justify-center">
             <Button
               variant="ghost"
               className={cn(
