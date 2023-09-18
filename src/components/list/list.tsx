@@ -109,10 +109,12 @@ type CheckboxRecord = { [x: string]: CheckedState }
 
 interface Props {
   edit: boolean
-  data: Document
+  data: Document | null
 }
 
 export function EntityList(props: Props) {
+  const entities = props.data?.entities ?? []
+
   const [selectedGroups, setSelectedGroups] = useState<CheckboxRecord>(
     cardGroups.reduce((acc, group) => {
       acc[group.prefix] = true
@@ -121,13 +123,13 @@ export function EntityList(props: Props) {
   )
 
   const [selectedEntities, setSelectedEntities] = useState<CheckboxRecord>(
-    props.data.entities.reduce((acc, entity) => {
+    entities.reduce((acc, entity) => {
       acc[entity.type] = true
       return acc
     }, {} as CheckboxRecord)
   )
 
-  const entityMap = props.data.entities.reduce(
+  const entityMap = entities.reduce(
     (acc, entity) => {
       acc[entity.type] = entity
       return acc
@@ -139,86 +141,88 @@ export function EntityList(props: Props) {
     <ul className="grid grid-cols-1 gap-2">
       {cardGroups.map(function (group, index) {
         return (
-          <Card key={index} className="w-full border">
-            <CardHeader className="relative">
-              <label className="flex gap-2">
-                {props.edit && (
-                  <Checkbox
-                    checked={selectedGroups[group.prefix]}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        setSelectedEntities({
-                          ...selectedEntities,
-                          ...group.fields.reduce((acc, field) => {
-                            acc[field] = true
-                            return acc
-                          }, {} as CheckboxRecord),
+          <li key={index} className="w-full">
+            <Card className="w-full">
+              <CardHeader className="relative py-4">
+                <label className="flex gap-2">
+                  {props.edit && (
+                    <Checkbox
+                      checked={selectedGroups[group.prefix]}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedEntities({
+                            ...selectedEntities,
+                            ...group.fields.reduce((acc, field) => {
+                              acc[field] = true
+                              return acc
+                            }, {} as CheckboxRecord),
+                          })
+                        } else {
+                          setSelectedEntities({
+                            ...selectedEntities,
+                            ...group.fields.reduce((acc, field) => {
+                              acc[field] = false
+                              return acc
+                            }, {} as CheckboxRecord),
+                          })
+                        }
+                        setSelectedGroups({
+                          ...selectedGroups,
+                          [group.prefix]: checked,
                         })
-                      } else {
-                        setSelectedEntities({
-                          ...selectedEntities,
-                          ...group.fields.reduce((acc, field) => {
-                            acc[field] = false
-                            return acc
-                          }, {} as CheckboxRecord),
-                        })
-                      }
-                      setSelectedGroups({
-                        ...selectedGroups,
-                        [group.prefix]: checked,
-                      })
-                    }}
-                  />
+                      }}
+                    />
+                  )}
+                  <CardTitle className="text-sm">{group.title}</CardTitle>
+                </label>
+              </CardHeader>
+              <CardContent
+                className={cn(
+                  "pt-4",
+                  selectedGroups[group.prefix] === false ? "opacity-50" : ""
                 )}
-                <CardTitle className="text-sm">{group.title}</CardTitle>
-              </label>
-            </CardHeader>
-            <CardContent
-              className={cn(
-                "pt-4",
-                selectedGroups[group.prefix] === false ? "opacity-50" : ""
-              )}
-            >
-              <ul className="grid grid-cols-2 gap-2">
-                {group.fields.map(function (field) {
-                  return (
-                    <li key={field}>
-                      <label className="flex gap-2">
-                        {props.edit && (
-                          <Checkbox
-                            checked={selectedEntities[field]}
-                            onCheckedChange={(checked) => {
-                              setSelectedEntities({
-                                ...selectedEntities,
-                                [field]: checked,
-                              })
-                            }}
-                          />
-                        )}
-                        <div className="flex flex-col">
-                          <h2 className="order-2 break-words font-mono text-xs text-muted-foreground">
-                            {field
-                              .split(group.prefix + "_")[1]
-                              .replace(/_/g, " ")}
-                          </h2>
-                          <p
-                            className={cn(
-                              "order-1 break-words text-sm font-medium",
-                              selectedEntities[field] === false
-                                ? "opacity-50"
-                                : ""
-                            )}
-                          >
-                            {entityMap[field].mentionText}
-                          </p>
-                        </div>
-                      </label>
-                    </li>
-                  )
-                })}
-              </ul>
-            </CardContent>
-          </Card>
+              >
+                <ul className="grid grid-cols-2 gap-2">
+                  {group.fields.map(function (field) {
+                    return (
+                      <li key={field}>
+                        <label className="flex gap-2">
+                          {props.edit && (
+                            <Checkbox
+                              checked={selectedEntities[field]}
+                              onCheckedChange={(checked) => {
+                                setSelectedEntities({
+                                  ...selectedEntities,
+                                  [field]: checked,
+                                })
+                              }}
+                            />
+                          )}
+                          <div className="flex flex-col">
+                            <h2 className="order-2 break-words font-mono text-xs text-muted-foreground">
+                              {field
+                                .split(group.prefix + "_")[1]
+                                .replace(/_/g, " ")}
+                            </h2>
+                            <p
+                              className={cn(
+                                "order-1 break-words text-sm font-medium",
+                                selectedEntities[field] === false
+                                  ? "opacity-50"
+                                  : ""
+                              )}
+                            >
+                              {entityMap[field].mentionText}
+                            </p>
+                          </div>
+                        </label>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </CardContent>
+            </Card>
+          </li>
         )
       })}
     </ul>

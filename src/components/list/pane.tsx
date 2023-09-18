@@ -1,5 +1,8 @@
-import { FileText } from "lucide-react"
+import { Edit, FileText, Lock } from "lucide-react"
 
+import { Document } from "@/lib/google"
+
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -8,6 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { EntityList } from "@/components/list/list"
+
+interface Props {
+  data: Document | null
+  edit: boolean
+  onClickEdit: () => void
+}
 
 export function DocumentSelect() {
   return (
@@ -30,5 +40,24 @@ export function DocumentSelect() {
         </SelectGroup>
       </SelectContent>
     </Select>
+  )
+}
+
+export function EntityListPane(props: Props) {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex gap-4">
+        <DocumentSelect />
+        <Button className="shrink-0" onClick={props.onClickEdit}>
+          {props.edit ? (
+            <Lock className="mr-2 h-4 w-4" />
+          ) : (
+            <Edit className="mr-2 h-4 w-4" />
+          )}
+          {props.edit ? "Lock" : "Edit"} fields
+        </Button>
+      </div>
+      <EntityList edit={props.edit} data={props.data} />
+    </div>
   )
 }

@@ -12,19 +12,12 @@ import { trpc } from "@/lib/trpc"
 import fixture from "@/fixtures/output.json"
 
 import { Button } from "@/components/ui/button"
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
-import { DocumentViewerCanvas } from "@/components/document-viewer/canvas"
-import { DocumentViewerEntityHighlight } from "@/components/document-viewer/highlight"
-import { DocumentViewerPagination } from "@/components/document-viewer/pagination"
-import { EntityListPane } from "@/components/entity-list/pane"
+import { DocumentViewerCanvas } from "@/components/document/canvas"
+import { DocumentViewerEntityHighlight } from "@/components/document/highlight"
+import { DocumentViewerPagination } from "@/components/document/pagination"
+import { EntityListPane } from "@/components/list/pane"
 import { ModeToggle } from "@/components/mode-toggle"
 
 export default function RootPage() {
@@ -77,7 +70,7 @@ export default function RootPage() {
   const uploadButton = (
     <label>
       <input className="hidden" accept=".pdf" type="file" onChange={loadFile} />
-      <Button asChild variant="outline" size="icon" className="cursor-pointer">
+      <Button asChild size="icon" className="cursor-pointer">
         <span>
           <Upload className="h-4 w-4" />
         </span>
@@ -87,8 +80,25 @@ export default function RootPage() {
   return (
     <div className="flex h-full w-full flex-col">
       <header className="flex items-center border-b px-4 py-2">
-        <div className="grow">
-          <h1 className="font-mono">commodity.ai</h1>
+        <div className="flex grow items-center gap-2">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="mr-2 lg:hidden">
+                <FileText className="h-4 w-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              className="w-[500px] max-w-full overflow-y-auto px-4 pt-12 sm:max-w-full lg:hidden"
+              side="left"
+            >
+              <EntityListPane
+                data={data}
+                edit={edit}
+                onClickEdit={() => setEdit(!edit)}
+              />
+            </SheetContent>
+          </Sheet>
+          <h1 className="font-mono font-bold">commodity.ai</h1>
         </div>
         <div className="flex items-center gap-2">
           <ModeToggle />
@@ -110,42 +120,13 @@ export default function RootPage() {
         </div>
       ) : (
         <div className="relative flex h-full min-h-0 w-full flex-col lg:flex-row">
-          <div className="hidden h-full w-[500px] shrink-0 overflow-y-auto p-2 lg:block">
+          <div className="hidden h-full w-[500px] shrink-0 overflow-y-auto p-4 lg:block">
             <EntityListPane
               data={data}
               edit={edit}
               onClickEdit={() => setEdit(!edit)}
             />
           </div>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute left-2 top-2 z-10 bg-background lg:hidden"
-              >
-                <FileText className="h-4 w-4" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              className="w-[500px] max-w-full overflow-y-auto sm:max-w-full lg:hidden"
-              side="left"
-            >
-              <SheetHeader>
-                <SheetTitle>Entities</SheetTitle>
-                <SheetDescription>
-                  View and manage entities extracted from the document.
-                </SheetDescription>
-              </SheetHeader>
-              <div className="py-4">
-                <EntityListPane
-                  data={data}
-                  edit={edit}
-                  onClickEdit={() => setEdit(!edit)}
-                />
-              </div>
-            </SheetContent>
-          </Sheet>
           <div className="relative flex h-full w-full min-w-0 flex-col">
             <DocumentViewerCanvas imageData={imageData} imageSize={imageSize}>
               {({ imageSize }) => {
