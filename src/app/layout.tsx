@@ -20,8 +20,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="h-full w-full overflow-hidden">
-      <body className={inter.className + " w-full h-full overflow-auto"}>
+    <html
+      lang="en"
+      className="h-full w-full overflow-hidden"
+      suppressHydrationWarning
+    >
+      <body className={inter.className + " w-full h-full"}>
         <Providers>{children}</Providers>
       </body>
     </html>

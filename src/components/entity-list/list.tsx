@@ -112,7 +112,7 @@ interface Props {
   data: Document
 }
 
-export function ViewerEntityList(props: Props) {
+export function EntityList(props: Props) {
   const [selectedGroups, setSelectedGroups] = useState<CheckboxRecord>(
     cardGroups.reduce((acc, group) => {
       acc[group.prefix] = true

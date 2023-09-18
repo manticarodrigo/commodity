@@ -12,7 +12,7 @@ interface Props {
   onPageChange?: (pageNumber: number) => void
 }
 
-export function ViewerPagination(props: Props) {
+export function DocumentViewerPagination(props: Props) {
   const [value, setValue] = useState(0)
 
   function pageChange(pageNumber: number) {

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { bufferToBase64 } from "@/utils/encoding"
 import { fileToString } from "@/utils/file"
 import { measureImage } from "@/utils/image"
-import { Edit, FileText, Lock, Upload } from "lucide-react"
+import { FileText, Upload } from "lucide-react"
 
 import { Document, Entity } from "@/lib/google"
 import { trpc } from "@/lib/trpc"
@@ -13,18 +13,19 @@ import fixture from "@/fixtures/output.json"
 
 import { Button } from "@/components/ui/button"
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Skeleton } from "@/components/ui/skeleton"
+import { DocumentViewerCanvas } from "@/components/document-viewer/canvas"
+import { DocumentViewerEntityHighlight } from "@/components/document-viewer/highlight"
+import { DocumentViewerPagination } from "@/components/document-viewer/pagination"
+import { EntityListPane } from "@/components/entity-list/pane"
 import { ModeToggle } from "@/components/mode-toggle"
-import { ViewerDoc } from "@/components/viewer/doc"
-import { ViewerEntityHighlight } from "@/components/viewer/highlight"
-import { ViewerEntityList } from "@/components/viewer/list"
-import { ViewerPagination } from "@/components/viewer/pagination"
 
 export default function RootPage() {
   const [edit, setEdit] = useState(false)
@@ -44,7 +45,7 @@ export default function RootPage() {
     }
   }, [imageData])
 
-  async function loadFile(event: React.ChangeEvent<HTMLInputElement>) {
+  const loadFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target
     if (files && files[0]) {
       const content = await fileToString(files[0])
@@ -63,13 +64,26 @@ export default function RootPage() {
     }
   }
 
-  function onClickEntity(entity: Entity) {
+  const onClickEntity = (entity: Entity) => {
     setHighlight(entity)
   }
 
-  const missingData =
-    !data || !imageData || (imageSize.width === 0 && imageSize.height === 0)
+  const isLoading =
+    mutation.isLoading ||
+    (imageData && imageSize.width === 0 && imageSize.height === 0)
 
+  const missingData = !data || !imageData
+
+  const uploadButton = (
+    <label>
+      <input className="hidden" accept=".pdf" type="file" onChange={loadFile} />
+      <Button asChild variant="outline" size="icon" className="cursor-pointer">
+        <span>
+          <Upload className="h-4 w-4" />
+        </span>
+      </Button>
+    </label>
+  )
   return (
     <div className="flex h-full w-full flex-col">
       <header className="flex items-center border-b px-4 py-2">
@@ -78,80 +92,67 @@ export default function RootPage() {
         </div>
         <div className="flex items-center gap-2">
           <ModeToggle />
-          <label>
-            <input
-              className="hidden"
-              accept=".pdf"
-              type="file"
-              onChange={loadFile}
-            />
-            <Button
-              asChild
-              variant="outline"
-              size="icon"
-              className="cursor-pointer"
-            >
-              <span>
-                <Upload className="h-4 w-4" />
-              </span>
-            </Button>
-          </label>
+          {uploadButton}
         </div>
       </header>
-      {mutation.isLoading ? (
-        <div className="p-4">
-          <h2 className="">Loading...</h2>
+      {isLoading ? (
+        <div className="flex flex-col gap-2 p-4">
+          <Skeleton className="h-4 w-56" />
+          <Skeleton className="h-4 w-96" />
         </div>
       ) : missingData ? (
-        <div className="p-4">
-          <h2>No data.</h2>
-          <p>Load a PDF document from your device to begin processing.</p>
+        <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 py-8">
+          <h2 className="font-mono text-lg font-bold">Upload document</h2>
+          <p className="text-muted-foreground">
+            Load a PDF document from your device to begin processing.
+          </p>
+          {uploadButton}
         </div>
       ) : (
-        <div className="flex h-full min-h-0">
-          <div className="w-full overflow-y-auto p-2 lg:h-full lg:w-1/3 lg:min-w-[500px]">
-            <div className="mb-2 flex gap-2">
-              <Select value="bol">
-                <SelectTrigger className="w-full min-w-0">
-                  <span className="inline-flex items-center">
-                    <FileText className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Select a document processor" />
-                  </span>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="bol">Bill of lading</SelectItem>
-                    <SelectItem disabled value="contract">
-                      Contract
-                    </SelectItem>
-                    <SelectItem disabled value="invoice">
-                      Invoice
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Button
-                variant="secondary"
-                className="shrink-0"
-                onClick={() => setEdit(!edit)}
-              >
-                {edit ? (
-                  <Lock className="mr-2 h-4 w-4" />
-                ) : (
-                  <Edit className="mr-2 h-4 w-4" />
-                )}
-                {edit ? "Lock" : "Edit"} fields
-              </Button>
-            </div>
-            <ViewerEntityList edit={edit} data={data} />
+        <div className="relative flex h-full min-h-0 w-full flex-col lg:flex-row">
+          <div className="hidden h-full w-[500px] shrink-0 overflow-y-auto p-2 lg:block">
+            <EntityListPane
+              data={data}
+              edit={edit}
+              onClickEdit={() => setEdit(!edit)}
+            />
           </div>
-          <div className="relative flex w-full grow flex-col lg:h-full">
-            <ViewerDoc imageData={imageData} imageSize={imageSize}>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="absolute left-2 top-2 z-10 bg-background lg:hidden"
+              >
+                <FileText className="h-4 w-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              className="w-[500px] overflow-y-auto sm:max-w-full lg:hidden"
+              side="left"
+            >
+              <SheetHeader>
+                <SheetTitle>Entities</SheetTitle>
+                <SheetDescription>
+                  View and manage entities extracted from the document.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="py-4">
+                <EntityListPane
+                  data={data}
+                  edit={edit}
+                  onClickEdit={() => setEdit(!edit)}
+                />
+              </div>
+            </SheetContent>
+          </Sheet>
+          <div className="relative flex w-full min-w-0 flex-col lg:h-full">
+            <DocumentViewerCanvas imageData={imageData} imageSize={imageSize}>
               {({ imageSize }) => {
                 return (
                   <React.Fragment>
                     {data.entities.map((entity) => (
-                      <ViewerEntityHighlight
+                      <DocumentViewerEntityHighlight
                         key={entity.id}
                         entity={entity}
                         imageSize={imageSize}
@@ -162,9 +163,9 @@ export default function RootPage() {
                   </React.Fragment>
                 )
               }}
-            </ViewerDoc>
+            </DocumentViewerCanvas>
             <div className="absolute bottom-0 left-0 w-full">
-              <ViewerPagination data={data}></ViewerPagination>
+              <DocumentViewerPagination data={data}></DocumentViewerPagination>
             </div>
           </div>
         </div>

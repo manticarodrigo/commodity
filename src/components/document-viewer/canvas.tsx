@@ -16,25 +16,23 @@ interface Props {
 
 const minSize = { width: 0, height: 0 }
 
-export function ViewerDoc(props: Props) {
+export function DocumentViewerCanvas(props: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [svgContainerSize, setSvgContainerSize] = useState(minSize)
 
-  useEffect(() => {
-    if (containerRef.current) {
-      const w = containerRef.current.offsetWidth
-      const h = containerRef.current.offsetHeight
-      if (w !== svgContainerSize.width || h !== svgContainerSize.height) {
-        setSvgContainerSize({ width: w, height: h })
-      }
+  const debouncedHandleResize = useDebouncedCallback(
+    () => {
+      const width = containerRef.current?.offsetWidth ?? minSize.width
+      const height = containerRef.current?.offsetHeight ?? minSize.height
+      setSvgContainerSize({ width, height })
+    },
+    1000,
+    {
+      leading: true,
+      trailing: true,
+      maxWait: 1000,
     }
-  }, [svgContainerSize.width, svgContainerSize.height])
-
-  const debouncedHandleResize = useDebouncedCallback(function handleResize() {
-    const width = containerRef.current?.offsetWidth ?? minSize.width
-    const height = containerRef.current?.offsetHeight ?? minSize.height
-    setSvgContainerSize({ width, height })
-  }, 1000)
+  )
 
   useEffect(() => {
     debouncedHandleResize()
