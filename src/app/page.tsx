@@ -128,7 +128,7 @@ export default function RootPage() {
               </Button>
             </SheetTrigger>
             <SheetContent
-              className="w-[500px] overflow-y-auto sm:max-w-full lg:hidden"
+              className="w-[500px] max-w-full overflow-y-auto sm:max-w-full lg:hidden"
               side="left"
             >
               <SheetHeader>
@@ -146,7 +146,7 @@ export default function RootPage() {
               </div>
             </SheetContent>
           </Sheet>
-          <div className="relative flex w-full min-w-0 flex-col lg:h-full">
+          <div className="relative flex h-full w-full min-w-0 flex-col">
             <DocumentViewerCanvas imageData={imageData} imageSize={imageSize}>
               {({ imageSize }) => {
                 return (
