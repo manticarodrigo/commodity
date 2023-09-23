@@ -17,7 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { DocumentCanvas } from "@/components/document/canvas"
 import { DocumentHighlight } from "@/components/document/highlight"
 import { DocumentPagination } from "@/components/document/pagination"
-import { EntityPane } from "@/components/entity/pane"
+import { EntityList } from "@/components/entity/list"
 import { ModeToggle } from "@/components/mode-toggle"
 
 export default function RootPage() {
@@ -91,7 +91,7 @@ export default function RootPage() {
               className="w-[500px] max-w-full overflow-y-auto px-4 pt-12 sm:max-w-full lg:hidden"
               side="left"
             >
-              <EntityPane
+              <EntityList
                 data={data}
                 edit={edit}
                 onClickEdit={() => setEdit(!edit)}
@@ -121,7 +121,7 @@ export default function RootPage() {
       ) : (
         <div className="relative flex h-full min-h-0 w-full flex-col lg:flex-row">
           <div className="hidden h-full w-[500px] shrink-0 overflow-y-auto p-4 lg:block">
-            <EntityPane
+            <EntityList
               data={data}
               edit={edit}
               onClickEdit={() => setEdit(!edit)}
