@@ -226,7 +226,7 @@ export function EntityList(props: Props) {
           Download
         </Button>
       </div>
-      <ul className="grid grid-cols-1 gap-2">
+      <ul className="grid grid-cols-1 gap-4">
         {cardGroups.map(function (group, index) {
           return (
             <li key={index} className="w-full">
