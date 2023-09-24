@@ -12,6 +12,14 @@ import { trpc } from "@/lib/trpc"
 import fixture from "@/fixtures/output.json"
 
 import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import { DocumentCanvas } from "@/components/document/canvas"
@@ -21,14 +29,14 @@ import { EntityList } from "@/components/entity/list"
 import { ModeToggle } from "@/components/mode-toggle"
 
 export default function RootPage() {
-  const [edit, setEdit] = useState(false)
-  const [data, setData] = useState<Document | null>(fixture.document)
+  const [editable, setEditable] = useState(false)
+  const [doc, setDoc] = useState<Document | null>(fixture.document)
   const [highlight, setHighlight] = useState<Entity | null>(null)
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
 
   const mutation = trpc.processDocument.useMutation()
 
-  const imageData = bufferToBase64(data?.pages[0].image.content.data ?? [])
+  const imageData = bufferToBase64(doc?.pages[0].image.content.data ?? [])
 
   useEffect(() => {
     if (imageData) {
@@ -46,14 +54,14 @@ export default function RootPage() {
       mutation.mutate(content, {
         onSuccess: (result) => {
           if (result.document) {
-            setData(result.document)
+            setDoc(result.document)
           } else {
-            setData(null)
+            setDoc(null)
           }
         },
       })
     } else {
-      setData(null)
+      setDoc(null)
     }
   }
 
@@ -65,7 +73,7 @@ export default function RootPage() {
     mutation.isLoading ||
     (imageData && imageSize.width === 0 && imageSize.height === 0)
 
-  const missingData = !data || !imageData
+  const missingData = !doc || !imageData
 
   const uploadButton = (
     <label>
@@ -77,6 +85,7 @@ export default function RootPage() {
       </Button>
     </label>
   )
+
   return (
     <div className="flex h-full w-full flex-col">
       <header className="flex items-center border-b px-4 py-2">
@@ -92,13 +101,33 @@ export default function RootPage() {
               side="left"
             >
               <EntityList
-                data={data}
-                edit={edit}
-                onClickEdit={() => setEdit(!edit)}
+                doc={doc}
+                editable={editable}
+                onClickEdit={() => setEditable(!editable)}
               />
             </SheetContent>
           </Sheet>
-          <h1 className="font-mono font-bold">commodity.ai</h1>
+          <h1 className="mr-2 font-mono font-bold">commodity.ai</h1>
+          {" / "}
+          <Select value="bol">
+            <SelectTrigger className="w-auto border-none outline-none">
+              <span className="inline-flex items-center pr-2">
+                <FileText className="mr-2 h-4 w-4" />
+                <SelectValue placeholder="Select a document processor" />
+              </span>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="bol">Bill of lading</SelectItem>
+                <SelectItem disabled value="contract">
+                  Contract
+                </SelectItem>
+                <SelectItem disabled value="invoice">
+                  Invoice
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex items-center gap-2">
           <ModeToggle />
@@ -122,9 +151,9 @@ export default function RootPage() {
         <div className="relative flex h-full min-h-0 w-full flex-col lg:flex-row">
           <div className="hidden h-full w-[500px] shrink-0 overflow-y-auto p-4 lg:block">
             <EntityList
-              data={data}
-              edit={edit}
-              onClickEdit={() => setEdit(!edit)}
+              doc={doc}
+              editable={editable}
+              onClickEdit={() => setEditable(!editable)}
             />
           </div>
           <div className="relative flex h-full w-full min-w-0 flex-col">
@@ -132,7 +161,7 @@ export default function RootPage() {
               {({ imageSize }) => {
                 return (
                   <React.Fragment>
-                    {data.entities.map((entity) => (
+                    {doc.entities.map((entity) => (
                       <DocumentHighlight
                         key={entity.id}
                         entity={entity}
@@ -146,7 +175,7 @@ export default function RootPage() {
               }}
             </DocumentCanvas>
             <div className="absolute bottom-0 left-0 w-full">
-              <DocumentPagination data={data}></DocumentPagination>
+              <DocumentPagination data={doc}></DocumentPagination>
             </div>
           </div>
         </div>

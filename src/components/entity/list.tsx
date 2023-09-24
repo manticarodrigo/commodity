@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { CheckedState } from "@radix-ui/react-checkbox"
-import { Download, Edit, FileText, Lock } from "lucide-react"
+import { Download, Edit, Lock } from "lucide-react"
 
 import { Document, Entity } from "@/lib/google"
 import { cn } from "@/lib/utils"
@@ -9,13 +9,15 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
 
 const ENTITY_TYPES = {
   CUSTOMER_ORDER_ADDITIONAL_SHIPPER_INFO:
@@ -119,13 +121,13 @@ type CheckboxRecord = { [x: string]: CheckedState }
 type ExportData = Record<string, string | number | boolean>[]
 
 interface Props {
-  edit: boolean
-  data: Document | null
+  editable: boolean
+  doc: Document | null
   onClickEdit: () => void
 }
 
 export function EntityList(props: Props) {
-  const entities = props.data?.entities ?? []
+  const [entities, setEntities] = useState(props.doc?.entities ?? [])
 
   const [selectedGroups, setSelectedGroups] = useState<CheckboxRecord>(
     cardGroups.reduce((acc, group) => {
@@ -163,7 +165,7 @@ export function EntityList(props: Props) {
   }
 
   const exportCSV = () => {
-    if (!props.data) return
+    if (!entities.length) return
 
     // Construct data object from selected entities
     const exportData: ExportData = []
@@ -194,37 +196,37 @@ export function EntityList(props: Props) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4">
-        <Select value="bol">
-          <SelectTrigger className="w-full min-w-0">
-            <span className="inline-flex items-center">
-              <FileText className="mr-2 h-4 w-4" />
-              <SelectValue placeholder="Select a document processor" />
-            </span>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="bol">Bill of lading</SelectItem>
-              <SelectItem disabled value="contract">
-                Contract
-              </SelectItem>
-              <SelectItem disabled value="invoice">
-                Invoice
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Button className="shrink-0" onClick={props.onClickEdit}>
-          {props.edit ? (
-            <Lock className="mr-2 h-4 w-4" />
-          ) : (
-            <Edit className="mr-2 h-4 w-4" />
-          )}
-          {props.edit ? "Lock" : "Edit"} fields
-        </Button>
-        <Button className="shrink-0" onClick={exportCSV}>
-          <Download className="mr-2 h-4 w-4" />
-          Download
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            className="shrink-0"
+            variant="secondary"
+            onClick={props.onClickEdit}
+          >
+            {props.editable ? (
+              <Lock className="mr-2 h-4 w-4" />
+            ) : (
+              <Edit className="mr-2 h-4 w-4" />
+            )}
+            {props.editable ? "Lock" : "Edit"} fields
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="shrink-0" variant="secondary">
+                <Download className="mr-2 h-4 w-4" />
+                Download
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Export as</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onSelect={exportCSV}>CSV</DropdownMenuItem>
+                <DropdownMenuItem disabled>Excel</DropdownMenuItem>
+                <DropdownMenuItem disabled>PDF</DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <ul className="grid grid-cols-1 gap-4">
         {cardGroups.map(function (group, index) {
@@ -233,7 +235,7 @@ export function EntityList(props: Props) {
               <Card className="w-full">
                 <CardHeader className="relative py-4">
                   <label className="flex gap-2">
-                    {props.edit && (
+                    {props.editable && (
                       <Checkbox
                         checked={selectedGroups[group.prefix]}
                         onCheckedChange={(checked) => {
@@ -272,26 +274,59 @@ export function EntityList(props: Props) {
                 >
                   <ul className="grid grid-cols-2 gap-2">
                     {group.fields.map(function (field) {
-                      return (
-                        <li key={field}>
-                          <label className="flex gap-2">
-                            {props.edit && (
-                              <Checkbox
-                                checked={selectedEntities[field]}
-                                onCheckedChange={(checked) => {
-                                  setSelectedEntities({
-                                    ...selectedEntities,
-                                    [field]: checked,
-                                  })
+                      if (props.editable) {
+                        return (
+                          <li key={field}>
+                            <label className="flex flex-col gap-2">
+                              <div className="flex items-center gap-2">
+                                <Checkbox
+                                  checked={selectedEntities[field]}
+                                  onCheckedChange={(checked) => {
+                                    setSelectedEntities({
+                                      ...selectedEntities,
+                                      [field]: checked,
+                                    })
+                                  }}
+                                />
+                                <span className="break-words font-mono text-xs text-muted-foreground">
+                                  {field
+                                    .split(group.prefix + "_")[1]
+                                    .replace(/_/g, " ")}
+                                </span>
+                              </div>
+                              <Input
+                                className={cn(
+                                  "order-1",
+                                  selectedEntities[field] === false
+                                    ? "opacity-50"
+                                    : ""
+                                )}
+                                value={entityMap[field].mentionText}
+                                onChange={(e) => {
+                                  const updatedEntities = entities.map(
+                                    (entity) => {
+                                      if (entity.type === field) {
+                                        entity.mentionText = e.target.value
+                                      }
+                                      return entity
+                                    }
+                                  )
+                                  setEntities(updatedEntities)
                                 }}
                               />
-                            )}
+                            </label>
+                          </li>
+                        )
+                      }
+                      return (
+                        <li key={field}>
+                          <div className="flex gap-2">
                             <div className="flex flex-col">
-                              <h2 className="order-2 break-words font-mono text-xs text-muted-foreground">
+                              <span className="order-2 break-words font-mono text-xs text-muted-foreground">
                                 {field
                                   .split(group.prefix + "_")[1]
                                   .replace(/_/g, " ")}
-                              </h2>
+                              </span>
                               <p
                                 className={cn(
                                   "order-1 break-words text-sm font-medium",
@@ -303,7 +338,7 @@ export function EntityList(props: Props) {
                                 {entityMap[field].mentionText}
                               </p>
                             </div>
-                          </label>
+                          </div>
                         </li>
                       )
                     })}
