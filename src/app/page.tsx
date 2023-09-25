@@ -88,11 +88,15 @@ export default function RootPage() {
 
   return (
     <div className="flex h-full w-full flex-col">
-      <header className="flex items-center border-b px-4 py-2">
+      <header className="flex items-center gap-2 border-b px-4 py-2">
         <div className="flex grow items-center gap-2">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="mr-2 lg:hidden">
+              <Button
+                variant="outline"
+                size="icon"
+                className="shrink-0 lg:hidden"
+              >
                 <FileText className="h-4 w-4" />
               </Button>
             </SheetTrigger>
@@ -107,10 +111,14 @@ export default function RootPage() {
               />
             </SheetContent>
           </Sheet>
-          <h1 className="font-mono font-bold">commodity.ai</h1>
-          <span className="px-4">/</span>
+          <h1 className="sr-only font-mono font-bold lg:not-sr-only">
+            commodity.ai
+          </h1>
+          <span className="sr-only lg:not-sr-only">
+            <span className="px-4">/</span>
+          </span>
           <Select value="bol">
-            <SelectTrigger className="w-auto">
+            <SelectTrigger className="w-full lg:w-auto">
               <span className="inline-flex items-center pr-2">
                 <FileText className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Select a document processor" />
