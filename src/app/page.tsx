@@ -107,10 +107,10 @@ export default function RootPage() {
               />
             </SheetContent>
           </Sheet>
-          <h1 className="mr-2 font-mono font-bold">commodity.ai</h1>
-          {" / "}
+          <h1 className="font-mono font-bold">commodity.ai</h1>
+          <span className="px-4">/</span>
           <Select value="bol">
-            <SelectTrigger className="w-auto border-none outline-none">
+            <SelectTrigger className="w-auto">
               <span className="inline-flex items-center pr-2">
                 <FileText className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Select a document processor" />
