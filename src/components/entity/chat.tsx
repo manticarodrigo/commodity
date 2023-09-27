@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { useChat } from "ai/react"
 import { Bot, Send, User } from "lucide-react"
 import ReactMarkdown from "react-markdown"
@@ -12,7 +12,14 @@ interface Props {
 }
 
 export function DocumentChat(props: Props) {
-  const { messages, input, handleInputChange, handleSubmit, reload } = useChat({
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    reload,
+    isLoading,
+  } = useChat({
     api: "/api/chat",
     initialMessages: [
       {
@@ -43,16 +50,10 @@ export function DocumentChat(props: Props) {
     ],
   })
 
-  const mountedRef = useRef(false)
-
   useEffect(() => {
-    if (mountedRef.current) {
-      if (props.doc?.text) {
-        console.log("reloading")
-        reload()
-      }
-    } else {
-      mountedRef.current = true
+    if (props.doc?.text && !isLoading) {
+      console.log("reloading")
+      reload()
     }
   }, [props.doc?.text])
 

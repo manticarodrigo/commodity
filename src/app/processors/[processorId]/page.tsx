@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import { bufferToBase64 } from "@/utils/encoding"
 import { fileToString } from "@/utils/file"
@@ -27,27 +27,29 @@ export default function RootPage() {
 
   const [page, setPage] = useState(0)
   const [editable, setEditable] = useState(false)
+  const [isLoadingFixture, setIsLoadingFixture] = useState(false)
 
   const mutation = trpc.processDocument.useMutation()
 
   const imageData = bufferToBase64(doc?.pages[page].image.content.data ?? [])
 
-  const mountedRef = useRef(false)
+  const isLoading =
+    isLoadingFixture ||
+    mutation.isLoading ||
+    (imageData && imageSize.width === 0 && imageSize.height === 0)
+
   useEffect(() => {
-    console.log("useEffect")
-    if (mountedRef.current) {
+    if (!doc && !isLoadingFixture) {
       const url = `/fixtures/${params.processorId}.json`
-      console.log("url", url)
+      setIsLoadingFixture(true)
       fetch(url).then((response) => {
-        console.log("response succeeded")
         response.json().then((data) => {
           setDoc(data.document)
+          setIsLoadingFixture(false)
         })
       })
-    } else {
-      mountedRef.current = true
     }
-  }, [])
+  }, [doc, isLoadingFixture, params.processorId])
 
   useEffect(() => {
     if (imageData) {
@@ -85,10 +87,6 @@ export default function RootPage() {
   const onClickEntity = (entity: Entity) => {
     setHighlight(entity)
   }
-
-  const isLoading =
-    mutation.isLoading ||
-    (imageData && imageSize.width === 0 && imageSize.height === 0)
 
   const missingData = !doc || !imageData
 
