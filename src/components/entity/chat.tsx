@@ -1,9 +1,10 @@
-import { useEffect } from "react"
 import { useChat } from "ai/react"
 import { Bot, Send, User } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 
 import { Document } from "@/lib/google"
+
+import { useEffectOnce } from "@/hooks/use-effect-once"
 
 import { Badge } from "@/components/ui/badge"
 
@@ -50,12 +51,11 @@ export function DocumentChat(props: Props) {
     ],
   })
 
-  useEffect(() => {
+  useEffectOnce(() => {
     if (props.doc?.text && !isLoading) {
-      console.log("reloading")
       reload()
     }
-  }, [props.doc?.text])
+  })
 
   return (
     <div className="flex grow flex-col rounded-lg bg-secondary">

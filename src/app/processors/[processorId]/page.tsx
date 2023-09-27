@@ -10,6 +10,8 @@ import { Upload } from "lucide-react"
 import { Document, Entity } from "@/lib/google"
 import { trpc } from "@/lib/trpc"
 
+import { useEffectOnce } from "@/hooks/use-effect-once"
+
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { DocumentBlock } from "@/components/document/block"
@@ -38,8 +40,8 @@ export default function RootPage() {
     mutation.isLoading ||
     (imageData && imageSize.width === 0 && imageSize.height === 0)
 
-  useEffect(() => {
-    if (!doc && !isLoadingFixture) {
+  useEffectOnce(() => {
+    if (!doc) {
       const url = `/fixtures/${params.processorId}.json`
       setIsLoadingFixture(true)
       fetch(url).then((response) => {
@@ -49,7 +51,7 @@ export default function RootPage() {
         })
       })
     }
-  }, [doc, isLoadingFixture, params.processorId])
+  })
 
   useEffect(() => {
     if (imageData) {
