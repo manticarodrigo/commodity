@@ -51,6 +51,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.4",
     "react-markdown": "^8.0.7",
+    "react-textarea-autosize": "^8.5.3",
     "react-zoom-pan-pinch": "^3.1.0",
     "request": "^2.88.2",
     "superjson": "^1.13.1",
