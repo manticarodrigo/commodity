@@ -31,7 +31,6 @@ export default function RootPage() {
   const params = useParams()
   const processorId = params.processorId as keyof typeof outputMap
   const [doc, setDoc] = useState<Document | null>(
-    // @ts-expect-error - this is fine
     outputMap[processorId].document
   )
   const [highlight, setHighlight] = useState<Entity | null>(null)
