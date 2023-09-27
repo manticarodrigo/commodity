@@ -72,7 +72,7 @@ export function DocumentChat(props: Props) {
                   <Bot className="h-4 w-4" />
                 )}
               </Badge>
-              <ReactMarkdown className="prose prose-sm whitespace-pre-line prose-p:my-0">
+              <ReactMarkdown className="prose prose-sm whitespace-pre-line dark:prose-invert prose-p:my-0">
                 {m.content}
               </ReactMarkdown>
             </li>
@@ -81,7 +81,7 @@ export function DocumentChat(props: Props) {
 
       <div className="shrink-0 p-4">
         <form
-          className="flex items-center rounded-full bg-foreground text-background placeholder:text-secondary"
+          className="flex items-center rounded-full bg-foreground px-2 text-background placeholder:text-secondary"
           onSubmit={handleSubmit}
         >
           <label className="flex grow">
@@ -98,7 +98,7 @@ export function DocumentChat(props: Props) {
             className="flex shrink-0 items-center gap-2 border-l border-muted-foreground p-4"
           >
             <span className="sr-only">Send</span>
-            <Send className="h-6 w-6" />
+            <Send className="h-5 w-5 rotate-45" />
           </button>
         </form>
       </div>
