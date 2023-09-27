@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const ENTITY_TYPES = {
   CUSTOMER_ORDER_ADDITIONAL_SHIPPER_INFO:
@@ -194,161 +195,170 @@ export function EntityList(props: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex gap-4">
-        <div className="flex gap-2">
-          <Button
-            className="shrink-0"
-            variant="secondary"
-            onClick={props.onClickEdit}
-          >
-            {props.editable ? (
-              <Lock className="mr-2 h-4 w-4" />
-            ) : (
-              <Edit className="mr-2 h-4 w-4" />
-            )}
-            {props.editable ? "Lock" : "Edit"} fields
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="shrink-0" variant="secondary">
-                <Download className="mr-2 h-4 w-4" />
-                Download
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Export as</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem onSelect={exportCSV}>CSV</DropdownMenuItem>
-                <DropdownMenuItem disabled>Excel</DropdownMenuItem>
-                <DropdownMenuItem disabled>PDF</DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+    <Tabs defaultValue="entities">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="entities">Entities</TabsTrigger>
+        <TabsTrigger value="text">Text</TabsTrigger>
+      </TabsList>
+      <TabsContent value="entities" className="flex flex-col gap-4 pt-4">
+        <div className="flex gap-4">
+          <div className="flex gap-2">
+            <Button
+              className="shrink-0"
+              variant="secondary"
+              onClick={props.onClickEdit}
+            >
+              {props.editable ? (
+                <Lock className="mr-2 h-4 w-4" />
+              ) : (
+                <Edit className="mr-2 h-4 w-4" />
+              )}
+              {props.editable ? "Lock" : "Edit"} fields
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="shrink-0" variant="secondary">
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Export as</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onSelect={exportCSV}>CSV</DropdownMenuItem>
+                  <DropdownMenuItem disabled>Excel</DropdownMenuItem>
+                  <DropdownMenuItem disabled>PDF</DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
-      <ul className="grid grid-cols-1 gap-4">
-        {cardGroups.map(function (group, index) {
-          return (
-            <li key={index} className="w-full">
-              <Card className="w-full">
-                <CardHeader className="relative py-4">
-                  <label className="flex gap-2">
-                    {props.editable && (
-                      <Checkbox
-                        checked={selectedGroups[group.prefix]}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setSelectedEntities({
-                              ...selectedEntities,
-                              ...group.fields.reduce((acc, field) => {
-                                acc[field] = true
-                                return acc
-                              }, {} as CheckboxRecord),
+        <ul className="grid grid-cols-1 gap-4">
+          {cardGroups.map(function (group, index) {
+            return (
+              <li key={index} className="w-full">
+                <Card className="w-full">
+                  <CardHeader className="relative py-4">
+                    <label className="flex gap-2">
+                      {props.editable && (
+                        <Checkbox
+                          checked={selectedGroups[group.prefix]}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setSelectedEntities({
+                                ...selectedEntities,
+                                ...group.fields.reduce((acc, field) => {
+                                  acc[field] = true
+                                  return acc
+                                }, {} as CheckboxRecord),
+                              })
+                            } else {
+                              setSelectedEntities({
+                                ...selectedEntities,
+                                ...group.fields.reduce((acc, field) => {
+                                  acc[field] = false
+                                  return acc
+                                }, {} as CheckboxRecord),
+                              })
+                            }
+                            setSelectedGroups({
+                              ...selectedGroups,
+                              [group.prefix]: checked,
                             })
-                          } else {
-                            setSelectedEntities({
-                              ...selectedEntities,
-                              ...group.fields.reduce((acc, field) => {
-                                acc[field] = false
-                                return acc
-                              }, {} as CheckboxRecord),
-                            })
-                          }
-                          setSelectedGroups({
-                            ...selectedGroups,
-                            [group.prefix]: checked,
-                          })
-                        }}
-                      />
+                          }}
+                        />
+                      )}
+                      <CardTitle className="text-sm">{group.title}</CardTitle>
+                    </label>
+                  </CardHeader>
+                  <CardContent
+                    className={cn(
+                      "pt-4",
+                      selectedGroups[group.prefix] === false ? "opacity-50" : ""
                     )}
-                    <CardTitle className="text-sm">{group.title}</CardTitle>
-                  </label>
-                </CardHeader>
-                <CardContent
-                  className={cn(
-                    "pt-4",
-                    selectedGroups[group.prefix] === false ? "opacity-50" : ""
-                  )}
-                >
-                  <ul className="grid grid-cols-2 gap-2">
-                    {group.fields.map(function (field) {
-                      if (props.editable) {
-                        return (
-                          <li key={field}>
-                            <label className="flex flex-col gap-2">
-                              <div className="flex items-center gap-2">
-                                <Checkbox
-                                  checked={selectedEntities[field]}
-                                  onCheckedChange={(checked) => {
-                                    setSelectedEntities({
-                                      ...selectedEntities,
-                                      [field]: checked,
-                                    })
+                  >
+                    <ul className="grid grid-cols-2 gap-2">
+                      {group.fields.map(function (field) {
+                        if (props.editable) {
+                          return (
+                            <li key={field}>
+                              <label className="flex flex-col gap-2">
+                                <div className="flex items-center gap-2">
+                                  <Checkbox
+                                    checked={selectedEntities[field]}
+                                    onCheckedChange={(checked) => {
+                                      setSelectedEntities({
+                                        ...selectedEntities,
+                                        [field]: checked,
+                                      })
+                                    }}
+                                  />
+                                  <span className="break-words font-mono text-xs text-muted-foreground">
+                                    {field
+                                      .split(group.prefix + "_")[1]
+                                      .replace(/_/g, " ")}
+                                  </span>
+                                </div>
+                                <Input
+                                  className={cn(
+                                    "order-1",
+                                    selectedEntities[field] === false
+                                      ? "opacity-50"
+                                      : ""
+                                  )}
+                                  value={entityMap[field].mentionText}
+                                  onChange={(e) => {
+                                    const updatedEntities = entities.map(
+                                      (entity) => {
+                                        if (entity.type === field) {
+                                          entity.mentionText = e.target.value
+                                        }
+                                        return entity
+                                      }
+                                    )
+                                    setEntities(updatedEntities)
                                   }}
                                 />
-                                <span className="break-words font-mono text-xs text-muted-foreground">
+                              </label>
+                            </li>
+                          )
+                        }
+                        return (
+                          <li key={field}>
+                            <div className="flex gap-2">
+                              <div className="flex flex-col">
+                                <span className="order-2 break-words font-mono text-xs text-muted-foreground">
                                   {field
                                     .split(group.prefix + "_")[1]
                                     .replace(/_/g, " ")}
                                 </span>
+                                <p
+                                  className={cn(
+                                    "order-1 break-words text-sm font-medium",
+                                    selectedEntities[field] === false
+                                      ? "opacity-50"
+                                      : ""
+                                  )}
+                                >
+                                  {entityMap[field]?.mentionText ?? "--"}
+                                </p>
                               </div>
-                              <Input
-                                className={cn(
-                                  "order-1",
-                                  selectedEntities[field] === false
-                                    ? "opacity-50"
-                                    : ""
-                                )}
-                                value={entityMap[field].mentionText}
-                                onChange={(e) => {
-                                  const updatedEntities = entities.map(
-                                    (entity) => {
-                                      if (entity.type === field) {
-                                        entity.mentionText = e.target.value
-                                      }
-                                      return entity
-                                    }
-                                  )
-                                  setEntities(updatedEntities)
-                                }}
-                              />
-                            </label>
+                            </div>
                           </li>
                         )
-                      }
-                      return (
-                        <li key={field}>
-                          <div className="flex gap-2">
-                            <div className="flex flex-col">
-                              <span className="order-2 break-words font-mono text-xs text-muted-foreground">
-                                {field
-                                  .split(group.prefix + "_")[1]
-                                  .replace(/_/g, " ")}
-                              </span>
-                              <p
-                                className={cn(
-                                  "order-1 break-words text-sm font-medium",
-                                  selectedEntities[field] === false
-                                    ? "opacity-50"
-                                    : ""
-                                )}
-                              >
-                                {entityMap[field].mentionText}
-                              </p>
-                            </div>
-                          </div>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </CardContent>
-              </Card>
-            </li>
-          )
-        })}
-      </ul>
-    </div>
+                      })}
+                    </ul>
+                  </CardContent>
+                </Card>
+              </li>
+            )
+          })}
+        </ul>
+      </TabsContent>
+      <TabsContent value="text" className="overflow-auto whitespace-pre">
+        {props.doc?.text ?? "No text available"}
+      </TabsContent>
+    </Tabs>
   )
 }

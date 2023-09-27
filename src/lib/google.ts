@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { promises } from "fs"
 import DocumentAI from "@google-cloud/documentai"
 
 const { DocumentProcessorServiceClient } = DocumentAI.v1
 
 const projectId = "896559694339"
-const processorId = "929ba35e991edc07"
 
 const client = new DocumentProcessorServiceClient({
   apiEndpoint: "us-documentai.googleapis.com",
@@ -17,7 +17,7 @@ const client = new DocumentProcessorServiceClient({
   },
 })
 
-export async function processDocument(content: string) {
+export async function processDocument(processorId: string, content: string) {
   const name = `projects/${projectId}/locations/us/processors/${processorId}`
   const request = {
     name: name,
@@ -29,7 +29,10 @@ export async function processDocument(content: string) {
 
   const [result] = await client.processDocument(request)
 
-  // await promises.writeFile("src/fixtures/output.json", JSON.stringify(result))
+  await promises.writeFile(
+    `src/fixtures/${processorId}.json`,
+    JSON.stringify(result)
+  )
 
   return result
 }

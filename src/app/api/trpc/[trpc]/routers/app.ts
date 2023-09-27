@@ -6,9 +6,14 @@ import { createRouter, protectedProcedure } from "../trpc"
 
 export const appRouter = createRouter({
   processDocument: protectedProcedure
-    .input(z.string())
+    .input(
+      z.object({
+        processorId: z.string(),
+        content: z.string(),
+      })
+    )
     .mutation(async ({ input }) => {
-      const result = await processDocument(input)
+      const result = await processDocument(input.processorId, input.content)
 
       return JSON.parse(JSON.stringify(result)) as Response
     }),

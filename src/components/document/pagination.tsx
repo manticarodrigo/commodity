@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { bufferToBase64 } from "@/utils/encoding"
 
 import { Document } from "@/lib/google"
@@ -9,19 +8,11 @@ import { Button } from "@/components/ui/button"
 
 interface Props {
   data: Document
-  onPageChange?: (pageNumber: number) => void
+  page: number
+  onPageChange: (pageNumber: number) => void
 }
 
 export function DocumentPagination(props: Props) {
-  const [value, setValue] = useState(0)
-
-  function pageChange(pageNumber: number) {
-    setValue(pageNumber)
-    if (props.onPageChange) {
-      props.onPageChange(pageNumber)
-    }
-  }
-
   return (
     <ol className="flex gap-4 bg-gradient-to-t from-secondary/50 via-secondary/25 p-4">
       {props.data.pages?.map((page, index) => {
@@ -34,9 +25,9 @@ export function DocumentPagination(props: Props) {
               variant="ghost"
               className={cn(
                 "flex flex-col gap-2 h-auto rounded hover:bg-secondary/75 border",
-                index === value ? "bg-secondary/50" : ""
+                index === props.page ? "bg-secondary/50" : ""
               )}
-              onClick={() => pageChange(index)}
+              onClick={() => props.onPageChange(index)}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={imageData} className="w-16 border" alt="page" />
