@@ -35,8 +35,10 @@ export default function RootPage() {
   const mountedRef = useRef(false)
   useEffect(() => {
     if (mountedRef.current) {
-      import(`@/fixtures/${params.processorId}.json`).then((data) => {
-        setDoc(data.document)
+      fetch(`/fixtures/${params.processorId}.json`).then((response) => {
+        response.json().then((data) => {
+          setDoc(data.document)
+        })
       })
     } else {
       mountedRef.current = true
