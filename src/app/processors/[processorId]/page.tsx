@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useParams } from "next/navigation"
 import { bufferToBase64 } from "@/utils/encoding"
 import { fileToString } from "@/utils/file"
@@ -9,9 +9,6 @@ import { Upload } from "lucide-react"
 
 import { Document, Entity } from "@/lib/google"
 import { trpc } from "@/lib/trpc"
-
-import contract from "@/fixtures/13ba0a2985996da3.json"
-import bol from "@/fixtures/929ba35e991edc07.json"
 
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -22,17 +19,9 @@ import { DocumentPagination } from "@/components/document/pagination"
 import { EntityList } from "@/components/entity/list"
 import { Header } from "@/components/header"
 
-const outputMap = {
-  "13ba0a2985996da3": contract,
-  "929ba35e991edc07": bol,
-}
-
 export default function RootPage() {
   const params = useParams()
-  const processorId = params.processorId as keyof typeof outputMap
-  const [doc, setDoc] = useState<Document | null>(
-    outputMap[processorId].document
-  )
+  const [doc, setDoc] = useState<Document | null>(null)
   const [highlight, setHighlight] = useState<Entity | null>(null)
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
 
@@ -42,6 +31,17 @@ export default function RootPage() {
   const mutation = trpc.processDocument.useMutation()
 
   const imageData = bufferToBase64(doc?.pages[page].image.content.data ?? [])
+
+  const mountedRef = useRef(false)
+  useEffect(() => {
+    if (mountedRef.current) {
+      import(`@/fixtures/${params.processorId}.json`).then((data) => {
+        setDoc(data.document)
+      })
+    } else {
+      mountedRef.current = true
+    }
+  }, [])
 
   useEffect(() => {
     if (imageData) {
