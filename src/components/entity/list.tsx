@@ -307,7 +307,7 @@ export function EntityList(props: Props) {
                                       ? "opacity-50"
                                       : ""
                                   )}
-                                  value={entityMap[field].mentionText}
+                                  value={entityMap[field]?.mentionText ?? ""}
                                   onChange={(e) => {
                                     const updatedEntities = entities.map(
                                       (entity) => {
