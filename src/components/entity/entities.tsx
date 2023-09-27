@@ -121,8 +121,8 @@ type CheckboxRecord = { [x: string]: CheckedState }
 type ExportData = Record<string, string | number | boolean>[]
 
 interface Props {
-  editable: boolean
   doc: Document | null
+  editable: boolean
   onClickEdit: () => void
 }
 

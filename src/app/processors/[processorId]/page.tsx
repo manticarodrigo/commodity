@@ -14,6 +14,7 @@ import { useEffectOnce } from "@/hooks/use-effect-once"
 
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import { DocumentChat } from "@/components/document-chat"
 import { DocumentBlock } from "@/components/document/block"
 import { DocumentCanvas } from "@/components/document/canvas"
 import { DocumentEntity } from "@/components/document/entity"
@@ -96,11 +97,13 @@ export default function RootPage() {
     <div className="flex h-full w-full flex-col">
       <Header
         sheet={
-          <EntityList
-            doc={doc}
-            editable={editable}
-            onClickEdit={() => setEditable(!editable)}
-          />
+          <div className="p-4">
+            <EntityList
+              doc={doc}
+              editable={editable}
+              onClickEdit={() => setEditable(!editable)}
+            />
+          </div>
         }
         actions={
           <label>
@@ -151,12 +154,14 @@ export default function RootPage() {
         </div>
       ) : (
         <div className="relative flex h-full min-h-0 w-full flex-col lg:flex-row">
-          <div className="hidden h-full w-[500px] shrink-0 overflow-y-auto p-4 lg:block">
-            <EntityList
-              doc={doc}
-              editable={editable}
-              onClickEdit={() => setEditable(!editable)}
-            />
+          <div className="hidden h-full w-[400px] shrink-0 overflow-y-auto lg:block">
+            <div className="p-4">
+              <EntityList
+                doc={doc}
+                editable={editable}
+                onClickEdit={() => setEditable(!editable)}
+              />
+            </div>
           </div>
           <div className="relative flex h-full w-full min-w-0 flex-col">
             <DocumentCanvas imageData={imageData} imageSize={imageSize}>
@@ -190,6 +195,11 @@ export default function RootPage() {
                 page={page}
                 onPageChange={setPage}
               />
+            </div>
+          </div>
+          <div className="hidden h-full w-[400px] shrink-0 flex-col overflow-y-auto lg:flex">
+            <div className="flex grow flex-col p-4">
+              <DocumentChat doc={doc} />
             </div>
           </div>
         </div>

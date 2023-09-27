@@ -53,20 +53,39 @@ export function DocumentCanvas(props: Props) {
         <TransformWrapper limitToBounds={false}>
           {({ zoomIn, zoomOut, resetTransform }) => (
             <React.Fragment>
-              <div className="absolute right-4 top-4 z-10 flex flex-col gap-2">
-                <Button variant="outline" size="icon" onClick={() => zoomIn()}>
-                  <ZoomIn className="h-4 w-4" />
-                </Button>
-                <Button variant="outline" size="icon" onClick={() => zoomOut()}>
-                  <ZoomOut className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => resetTransform()}
-                >
-                  <Maximize className="h-4 w-4" />
-                </Button>
+              <div className="absolute right-4 top-4 z-10 flex flex-col divide-y overflow-hidden rounded-lg bg-background shadow">
+                {[
+                  {
+                    key: "zoomIn",
+                    label: "Zoom in",
+                    onClick: () => zoomIn(),
+                    icon: ZoomIn,
+                  },
+                  {
+                    key: "zoomOut",
+                    label: "Zoom out",
+                    onClick: () => zoomOut(),
+                    icon: ZoomOut,
+                  },
+                  {
+                    key: "resetTransform",
+                    label: "Reset transform",
+                    onClick: () => resetTransform(),
+                    icon: Maximize,
+                  },
+                ].map(({ key, label, onClick, icon: Icon }) => (
+                  <div key={key}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="rounded-none"
+                      aria-label={label}
+                      onClick={onClick}
+                    >
+                      <Icon className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
               </div>
               <TransformComponent>
                 <div
