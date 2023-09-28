@@ -21,6 +21,7 @@ import { DocumentEntity } from "@/components/document/entity"
 import { DocumentPagination } from "@/components/document/pagination"
 import { EntityList } from "@/components/entity/list"
 import { Header } from "@/components/header"
+import { DocumentRisks } from "@/components/risks"
 
 export default function RootPage() {
   const params = useParams()
@@ -106,19 +107,22 @@ export default function RootPage() {
           </div>
         }
         actions={
-          <label>
-            <input
-              className="hidden"
-              accept=".pdf"
-              type="file"
-              onChange={loadFile}
-            />
-            <Button asChild size="icon" className="cursor-pointer">
-              <span>
-                <Upload className="h-4 w-4" />
-              </span>
-            </Button>
-          </label>
+          <>
+            <DocumentRisks />
+            <label>
+              <input
+                className="hidden"
+                accept=".pdf"
+                type="file"
+                onChange={loadFile}
+              />
+              <Button asChild size="icon" className="cursor-pointer">
+                <span>
+                  <Upload className="h-4 w-4" />
+                </span>
+              </Button>
+            </label>
+          </>
         }
       />
 

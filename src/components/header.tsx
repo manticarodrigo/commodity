@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { FileText } from "lucide-react"
 
@@ -35,8 +36,12 @@ export function Header({
             </SheetContent>
           </Sheet>
         )}
-        <Link href="/" className="sr-only lg:not-sr-only">
-          <h1 className="font-mono font-bold">commodity.ai</h1>
+        <Link
+          href="/"
+          className="sr-only flex items-center gap-2 lg:not-sr-only"
+        >
+          <Image src="/pantaleon.png" alt="" width={30} height={30} />
+          <h1 className="font-mono font-bold">Pantaleon</h1>
         </Link>
         <span className="hidden lg:block">
           <span className="px-4">/</span>
@@ -44,8 +49,8 @@ export function Header({
         <DocumentSelect />
       </div>
       <div className="flex items-center gap-2">
-        <ModeToggle />
         {actions}
+        <ModeToggle />
       </div>
     </header>
   )
