@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 
-const delay = 10000
+const delay = 5000
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export function DocumentRisks() {
@@ -44,9 +44,9 @@ export function DocumentRisks() {
         <DialogTrigger asChild>
           <Button
             variant="secondary"
-            className="bg-amber-100 hover:bg-amber-200"
+            className="bg-amber-100 hover:bg-amber-200 dark:bg-amber-800 dark:hover:bg-amber-700"
           >
-            <AlertTriangle className="mr-2 h-4 w-4 text-yellow-600" />
+            <AlertTriangle className="mr-2 h-4 w-4" />
             Review risks
           </Button>
         </DialogTrigger>

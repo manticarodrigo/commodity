@@ -196,7 +196,7 @@ export function DocumentEntities(props: Props) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4">
-        <div className="flex gap-2">
+        <div className="grid w-full grid-cols-2 gap-2">
           <Button
             className="shrink-0"
             variant="secondary"

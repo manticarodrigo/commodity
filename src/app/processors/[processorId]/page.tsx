@@ -116,7 +116,12 @@ export default function RootPage() {
                 type="file"
                 onChange={loadFile}
               />
-              <Button asChild size="icon" className="cursor-pointer">
+              <Button
+                asChild
+                size="icon"
+                variant="outline"
+                className="cursor-pointer"
+              >
                 <span>
                   <Upload className="h-4 w-4" />
                 </span>
