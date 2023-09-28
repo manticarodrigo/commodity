@@ -52,6 +52,11 @@ export function DocumentChat(props: Props) {
 
   return (
     <div className="flex h-full flex-col">
+      <div className="flex items-center gap-2 border-b px-4 py-2">
+        <div className="flex grow items-center justify-center gap-2">
+          <h1 className="font-mono font-bold">Copilot chat</h1>
+        </div>
+      </div>
       {filteredMessages.length === 0 && (
         <div className="flex grow flex-col items-center justify-center gap-4 p-4">
           <p>What are the __ in my document?</p>
@@ -94,7 +99,7 @@ export function DocumentChat(props: Props) {
                 ) : (
                   <Bot className="h-3 w-3" />
                 )}
-                {m.role === "user" ? "You" : "Bot"}
+                {m.role === "user" ? "You" : "Copilot"}
               </Badge>
             </div>
             <ReactMarkdown className="prose prose-sm whitespace-pre-line dark:prose-invert prose-p:my-0">
