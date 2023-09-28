@@ -9,6 +9,7 @@ import { Document } from "@/lib/google"
 import { useEffectOnce } from "@/hooks/use-effect-once"
 
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -102,7 +103,7 @@ export function DocumentCompletion(props: Props) {
           </DropdownMenu>
         </div>
       </div>
-      <div className="flex grow flex-col rounded-lg bg-secondary p-4">
+      <Card className="flex grow flex-col rounded-lg p-4">
         {props.editable ? (
           <TextareaAutosize
             value={text}
@@ -114,7 +115,7 @@ export function DocumentCompletion(props: Props) {
             {text || completion}
           </ReactMarkdown>
         )}
-      </div>
+      </Card>
     </div>
   )
 }

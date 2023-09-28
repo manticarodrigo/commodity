@@ -198,9 +198,7 @@ export default function RootPage() {
             </div>
           </div>
           <div className="hidden h-full w-[400px] shrink-0 flex-col overflow-y-auto lg:flex">
-            <div className="flex grow flex-col p-4">
-              <DocumentChat doc={doc} />
-            </div>
+            <DocumentChat doc={doc} />
           </div>
         </div>
       )}
