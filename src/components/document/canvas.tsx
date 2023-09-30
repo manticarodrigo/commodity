@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from "react"
-import { imageScale } from "@/utils/image"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Maximize, ZoomIn, ZoomOut } from "lucide-react"
-import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch"
-import { useDebouncedCallback } from "use-debounce"
+import {
+  ReactZoomPanPinchContentRef,
+  TransformComponent,
+  TransformWrapper,
+} from "react-zoom-pan-pinch"
 
 import { Button } from "@/components/ui/button"
 
@@ -14,44 +16,67 @@ interface Props {
   }) => React.ReactNode
 }
 
-const minSize = { width: 0, height: 0 }
-
+const zoomFactor = 8
 export function DocumentCanvas(props: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [svgContainerSize, setSvgContainerSize] = useState(minSize)
+  const transformRef = useRef<ReactZoomPanPinchContentRef | null>(null)
 
-  const debouncedHandleResize = useDebouncedCallback(
-    () => {
-      const width = containerRef.current?.offsetWidth ?? minSize.width
-      const height = containerRef.current?.offsetHeight ?? minSize.height
-      setSvgContainerSize({ width, height })
-    },
-    1000,
-    {
-      leading: true,
-      trailing: true,
-      maxWait: 1000,
+  const [container, setContainer] = useState<HTMLDivElement | null>(null)
+  const [containerWidth, setContainerWidth] = useState<number>(0)
+  const [containerHeight, setContainerHeight] = useState<number>(0)
+
+  const imageScale = useMemo(() => {
+    if (
+      containerWidth === 0 ||
+      containerHeight === 0 ||
+      props.imageSize.width === 0 ||
+      props.imageSize.height === 0
+    ) {
+      return 0
     }
-  )
+    return Math.min(
+      containerWidth / props.imageSize.width,
+      containerHeight / props.imageSize.height
+    )
+  }, [containerWidth, containerHeight, props.imageSize])
+
+  const handleResize = useCallback(() => {
+    if (container !== null) {
+      const rect = container.getBoundingClientRect()
+      setContainerWidth(rect.width)
+      setContainerHeight(rect.height)
+    } else {
+      setContainerWidth(0)
+      setContainerHeight(0)
+    }
+
+    setTimeout(() => {
+      transformRef.current?.centerView()
+      setTimeout(() => {
+        transformRef.current?.zoomOut(zoomFactor)
+      }, 500)
+    }, 500)
+  }, [container])
 
   useEffect(() => {
-    debouncedHandleResize()
-    window.addEventListener("resize", debouncedHandleResize)
+    handleResize()
+    window.addEventListener("resize", handleResize)
     return () => {
-      window.removeEventListener("resize", debouncedHandleResize)
+      window.removeEventListener("resize", handleResize)
     }
-  }, [])
-
-  const imageSize = imageScale(svgContainerSize, props.imageSize)
+  }, [handleResize])
 
   return (
-    <div
-      ref={containerRef}
-      className="flex h-full w-full shrink grow items-center justify-center bg-foreground/50"
-    >
-      {!!(svgContainerSize.width && svgContainerSize.height) && (
-        <TransformWrapper limitToBounds={false}>
-          {({ zoomIn, zoomOut, resetTransform }) => (
+    <div ref={setContainer} className="h-full w-full bg-foreground/50">
+      {imageScale > 0 && (
+        <TransformWrapper
+          ref={transformRef}
+          initialScale={imageScale}
+          minScale={imageScale}
+          maxScale={imageScale * zoomFactor}
+          centerOnInit={true}
+          limitToBounds={false}
+        >
+          {({ zoomIn, zoomOut, centerView }) => (
             <React.Fragment>
               <div className="absolute right-4 top-4 z-10 flex flex-col divide-y overflow-hidden rounded-lg bg-background shadow">
                 {[
@@ -70,7 +95,12 @@ export function DocumentCanvas(props: Props) {
                   {
                     key: "resetTransform",
                     label: "Reset transform",
-                    onClick: () => resetTransform(),
+                    onClick: () => {
+                      centerView()
+                      setTimeout(() => {
+                        zoomOut(zoomFactor)
+                      }, 500)
+                    },
                     icon: Maximize,
                   },
                 ].map(({ key, label, onClick, icon: Icon }) => (
@@ -87,29 +117,22 @@ export function DocumentCanvas(props: Props) {
                   </div>
                 ))}
               </div>
-              <TransformComponent>
-                <div
-                  className="flex cursor-move items-center justify-center"
-                  style={{
-                    width: svgContainerSize.width,
-                    height: svgContainerSize.height,
-                  }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={imageSize.width}
-                    height={imageSize.height}
-                  >
-                    <image
-                      width={imageSize.width}
-                      height={imageSize.height}
-                      href={`data:image/png;base64,${props.imageData}`}
-                    />
-                    {props.children({
-                      imageSize: { ...imageSize, x: 0, y: 0 },
-                    })}
-                  </svg>
-                </div>
+              <TransformComponent
+                wrapperStyle={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                wrapperClass="cursor-move"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" {...props.imageSize}>
+                  <image
+                    {...props.imageSize}
+                    href={`data:image/png;base64,${props.imageData}`}
+                  />
+                  {props.children({
+                    imageSize: { ...props.imageSize, x: 0, y: 0 },
+                  })}
+                </svg>
               </TransformComponent>
             </React.Fragment>
           )}
