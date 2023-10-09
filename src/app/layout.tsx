@@ -1,3 +1,5 @@
+import { Analytics } from "@vercel/analytics/react"
+
 import { Providers } from "@/components/providers"
 
 import "./globals.css"
@@ -27,6 +29,7 @@ export default function RootLayout({
     >
       <body className={inter.className + " w-full h-full"}>
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   )

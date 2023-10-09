@@ -32,6 +32,7 @@
     "@types/react-svg-pan-zoom": "^3.3.5",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.5.0",
+    "@vercel/analytics": "^1.1.0",
     "ai": "^2.2.13",
     "autoprefixer": "10.4.15",
     "class-variance-authority": "^0.7.0",

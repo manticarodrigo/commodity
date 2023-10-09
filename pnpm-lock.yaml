@@ -71,6 +71,9 @@ dependencies:
   '@typescript-eslint/parser':
     specifier: ^6.5.0
     version: 6.5.0(eslint@8.48.0)(typescript@5.2.2)
+  '@vercel/analytics':
+    specifier: ^1.1.0
+    version: 1.1.0
   ai:
     specifier: ^2.2.13
     version: 2.2.13(encoding@0.1.13)(react@18.2.0)(solid-js@1.7.12)(svelte@4.2.1)(vue@3.3.4)
@@ -1721,6 +1724,12 @@ packages:
     dependencies:
       '@typescript-eslint/types': 6.6.0
       eslint-visitor-keys: 3.4.3
+    dev: false
+
+  /@vercel/analytics@1.1.0:
+    resolution: {integrity: sha512-k5ePYZPxitxxD1eJenPUUuH3qK+EtaA9OVD3oO0BRbyT/LarmZF0qdkptRSidip1arQxsTEIWvHbTuj1oksl+Q==}
+    dependencies:
+      server-only: 0.0.1
     dev: false
 
   /@vue/compiler-core@3.3.4:
@@ -4970,6 +4979,10 @@ packages:
   /seroval@0.5.1:
     resolution: {integrity: sha512-ZfhQVB59hmIauJG5Ydynupy8KHyr5imGNtdDhbZG68Ufh1Ynkv9KOYOAABf71oVbQxJ8VkWnMHAjEHE7fWkH5g==}
     engines: {node: '>=10'}
+    dev: false
+
+  /server-only@0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
     dev: false
 
   /shebang-command@2.0.0:
