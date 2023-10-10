@@ -16,13 +16,13 @@ export default function RootPage() {
         <div className="hidden h-full shrink-0 flex-col overflow-y-auto border-x lg:flex">
           <ul className="flex flex-col gap-2 p-2">
             <li>
-              <Button variant="secondary" size="icon">
+              <Button variant="ghost" size="icon">
                 <Upload className="h-4 w-4" />
                 <span className="sr-only">Upload documents</span>
               </Button>
             </li>
             <li>
-              <Button variant="secondary" size="icon">
+              <Button variant="ghost" size="icon">
                 <Settings className="h-4 w-4" />
                 <span className="sr-only">Settings</span>
               </Button>
