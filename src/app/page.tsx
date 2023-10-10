@@ -29,7 +29,7 @@ export default function RootPage() {
             </li>
           </ul>
         </div>
-        <div className="h-full w-full min-w-0 overflow-auto p-4">
+        <div className="h-full w-full min-w-0 overflow-auto px-4">
           <DocumentTable />
         </div>
         <div className="hidden h-full w-[400px] shrink-0 flex-col overflow-y-auto border-l lg:flex">
