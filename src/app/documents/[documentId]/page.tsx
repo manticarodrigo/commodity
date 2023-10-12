@@ -21,5 +21,6 @@ export default async function DocumentPage({ params }: Props) {
   })
 
   const doc = fileUpload?.document as unknown as Document
+
   return <DocumentView doc={doc} />
 }

@@ -162,8 +162,10 @@ export const columns: ColumnDef<FileUpload>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
+    cell: function ActionCell({ row }) {
       const id = row.original.id
+      const router = useRouter()
+      const deleteMutation = trpc.deleteFileUploads.useMutation()
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -178,8 +180,30 @@ export const columns: ColumnDef<FileUpload>[] = [
               <Link href={`/documents/${id}`}>View & Edit</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Download</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                const win = window.open(row.original.url, "_blank")
+                win?.focus()
+              }}
+            >
+              Download
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                deleteMutation.mutate(
+                  {
+                    fileUploadIds: [id],
+                  },
+                  {
+                    onSuccess: () => {
+                      router.refresh()
+                    },
+                  }
+                )
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

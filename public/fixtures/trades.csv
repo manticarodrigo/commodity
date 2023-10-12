@@ -1,0 +1,53 @@
+,,,,,,,,,,,,,,,,,,,,,,
+,Contract Type,Counterparty,Contract # Header,Contract #,Status,Type,Quality,Crop Year,Shipment Period Start,Shipment Period End,Mode of Transport,Incoterm,Incoterm Destination,Origin,Mill,Packing Type, Costs Included , Weight ,Weight Unit of Measure,Allocation Status,Pricing Type,"Fixed Price Sold
+($/MT)"
+,Sale,Danone,S00234,S00234.000,Not Shipped,Refined,45 ICUMSA,2023,1-Dec-23,31-Dec-23,Truck,DDP,"Commerce, CA",Guatemala,Pantaleon,1 MT, Yes ,  (100.00),MT,,Fixed,$848.78 
+,Sale,Nestle,S00235,S00235.000,Not Shipped,White,150 ICUMSA,2024,1-Jun-24,30-Sep-24,Truck,DDP,"Milwaukee, WI",Nicaragua,Monte Rosa,1 MT, Yes ,"  (3,120.00)",MT,,Fixed,$690.93 
+,Sale,Coca-Cola,S00240,S00240.000,Not Shipped,Refined,45 ICUMSA,2024,1-Aug-24,30-Sep-24,Container,CIF,"Port of Philadelphia, PA",Guatemala,Pantaleon,50 Lb., Yes ,"  (1,000.00)",MT,,Fixed,$892.87 
+,Sale,Coca-Cola,S00241,S00241.000,Not Shipped,Refined,45 ICUMSA,2023,1-Oct-23,31-Dec-23,Truck,DDP,"Philadelphia, PA",Guatemala,Pantaleon,50 Lb., Yes ,  (386.00),MT,,Fixed,$976.65 
+,Sale,PepsiCo,S00242,S00242.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jun-24,31-Dec-24,Container,CIF,"Port of Philadelphia, PA",Guatemala,Pantaleon,50 Lb., No ,"  (1,000.00)",MT,,Fixed,$892.87 
+,Sale,Dr Pepper Snapple Group,S00243,S00243.000,Not Shipped,Refined,45 ICUMSA,2024,1-Aug-24,31-Dec-24,Truck,DDP,"Houston, TX",Guatemala,Pantaleon,50 Lb., No ,  (363.00),MT,,Fixed,$976.65 
+,Sale,Mars,S00244,S00244.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jul-24,1-Sep-24,Truck,DDP,"San Jose, TX",Guatemala,Pantaleon,50 Lb., No ,"  (1,000.00)",MT,,Fixed,$892.87 
+,Sale,Mondelez International,S00245,S00245.000,Not Shipped,Refined,45 ICUMSA,2023,1-Oct-23,31-Dec-23,Truck,DDP,"Las Vegas, NV",Guatemala,Pantaleon,50 Lb., No ,  (386.00),MT,,Fixed,$976.65 
+,Sale,Ferrero Group,S00258,S00258.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jun-24,31-Dec-24,Truck,DDP,"Honolulu, HI",Guatemala,Pantaleon,1 MT, No ,  (780.00),MT,,Fixed,"$1,063.51 "
+,Sale,The Hershey Company,S00272,S00272.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jun-24,30-Sep-24,Truck,DDP,"Fullerton, CA",Guatemala,Pantaleon,1 MT, No ,  (160.00),MT,,Fixed,$961.21 
+,Sale,Kellogg's,S00273,S00273.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jan-24,30-Sep-24,Truck,DDP,"Kent, WA",Guatemala,Magdalena,1 MT, No ,  (520.00),MT,,Fixed,$917.12 
+,Sale,General Mills,S00274,S00274.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jan-24,30-Apr-24,Truck,DDP,"Dallas, TX",Guatemala,Pantaleon,50 Lb., No ,  (500.00),MT,,Fixed,$918.00 
+,Sale,Grupo Bimbo,S00275,S00275.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jun-24,1-Sep-24,Truck,DDP,"La Mirada, CA",Guatemala,Pantaleon,50 Lb., No ,  (738.00),MT,,Fixed,$933.00 
+,Sale,Nestle,S00276,S00276.000,Not Shipped,White,200 ICUMSA,2024,1-May-24,31-Jul-24,Truck,DDP,"Toledo, OH",Mexico,Benito,1 MT, No ,"  (3,710.00)",MT,,Fixed,$841.50 
+,Sale,Unilever,S00288,S00288.000,Not Shipped,White,150 ICUMSA,2024,1-Sep-24,30-Sep-24,Truck,DDP,"Hialeah, FL",Nicaragua,Monte Rosa,50 Lb., No ,"  (1,200.00)",MT,,Fixed,$690.93 
+,Sale,Danone,S00300,S00300.000,Not Shipped,White,150 ICUMSA,2024,1-May-24,30-Nov-24,Truck,DDP,"La Mirada, CA",Nicaragua,San Antonio,1 MT, No ,"  (5,000.00)",MT,,Fixed,$632.29 
+,Sale,Kraft Heinz,S00305,S00305.000,Not Shipped,White,150 ICUMSA,2024,15-May-24,30-Sep-24,Truck,DDP,"Phoenix, AZ",Nicaragua,Monte Rosa,50 Lb., No ,"  (2,500.00)",MT,,Fixed,$892.87 
+,Sale,Conagra Brands,S00310,S00310.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jun-24,30-Nov-24,Container,CIF,"Port of Savannah, GA",Nicaragua,San Antonio,1 MT, No ,  (800.00),MT,,Fixed,$892.87 
+,Sale,Cadbury,S00312,S00312.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jun-24,31-Dec-24,Container,CIF,"Port of Long Beach, CA",Guatemala,Pantaleon,50 Lb., No ,  (500.00),MT,,Fixed,$892.87 
+,Sale,Fanta,S00315,S00315.000,Not Shipped,White,150 ICUMSA,2024,15-Nov-24,30-Nov-24,Truck,DDP,"White Plains, NY",Nicaragua,Monte Rosa,1 MT, No ,  (900.00),MT,,Fixed,"$1,063.51 "
+,Sale,Sprite,S00320,S00320.000,Not Shipped,White,200 ICUMSA,2024,1-May-24,30-Sep-24,Truck,DDP,"El Paso, TX",Mexico,Benito,1 MT, No ,"  (2,300.00)",MT,,Fixed,$961.21 
+,Sale,Mountain Dew,S00322,S00322.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jun-24,30-Nov-24,Container,CIF,"Port of New Orleans, LA",Guatemala,Pantaleon,50 Lb., No ,"  (1,000.00)",MT,,Fixed,$917.12 
+,Sale,Haribo,S00323,S00323.000,Not Shipped,Refined,45 ICUMSA,2024,1-Mar-24,30-Nov-24,Container,CIF,"Port of Charleston, SC",Guatemala,Pantaleon,50 Lb., No ,  (700.00),MT,,Fixed,$918.00 
+,Sale,Wrigley,S00325,S00324.000,Not Shipped,White,150 ICUMSA,2024,1-Jun-24,30-Sep-24,Container,CIF,"Port of Miami, FL",Nicaragua,Monte Rosa,1 MT, No ,"  (1,500.00)",MT,,Fixed,$933.00 
+,Sale,Lindt & Sprüngli,S00326,S00325.000,Not Shipped,White,150 ICUMSA,2024,1-May-24,30-Sep-24,Truck,DDP,"Los Angeles, CA",Nicaragua,San Antonio,1 MT, No ,"  (4,500.00)",MT,,Fixed,$841.50 
+,Sale,Nestea,S00327,S00326.000,Not Shipped,White,150 ICUMSA,2024,1-Jun-24,30-Jun-24,Container,CIF,"Port of Long Beach, CA",Nicaragua,Monte Rosa,1 MT, No ,"  (1,504.00)",MT,,Fixed,$707.68 
+,Sale,7UP,S00328,S00327.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jun-24,30-Jun-24,Container,CIF,"Port of Stockton, CA",Nicaragua,San Antonio,1 MT, No ,  (80.00),MT,,Fixed,"$1,014.13 "
+,Sale,Häagen-Dazs,S00340,S00328.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jul-24,31-Dec-24,Container,CIF,"Port of Savannah, GA",Nicaragua,San Antonio,1 MT, No ,  (850.00),MT,,Fixed,$892.87 
+,Sale,Pillsbury,S00329,S00329.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jun-24,30-Sep-24,Container,CIF,"Port of Long Beach, CA",Guatemala,Pantaleon,50 Lb., No ,  (550.00),MT,,Fixed,$892.87 
+,Sale,Betty Crocker,S00330,S00330.000,Not Shipped,White,150 ICUMSA,2024,1-Jun-24,31-Jul-24,Container,CIF,"Port of New Orleans, LA",Nicaragua,Monte Rosa,1 MT, No ,  (950.00),MT,,Fixed,$892.87 
+,Sale,Entenmann's,S00331,S00331.000,Not Shipped,White,200 ICUMSA,2024,1-May-24,30-Sep-24,Truck,DDP,"El Paso, TX",Mexico,Benito,1 MT, No ,"  (2,100.00)",MT,,Fixed,"$1,063.51 "
+,Sale,Hostess Brands,S00332,S00332.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jun-24,30-Sep-24,Container,CIF,"Port of New Orleans, LA",Guatemala,Pantaleon,50 Lb., No ,  (900.00),MT,,Fixed,$961.21 
+,Sale,Tropicana,S00333,S00333.000,Not Shipped,Refined,45 ICUMSA,2024,1-Feb-24,1-Mar-24,Container,CIF,"Port of Charleston, SC",Guatemala,Pantaleon,50 Lb., No ,  (650.00),MT,,Fixed,$917.12 
+,Sale,Minute Maid,S00334,S00334.000,Not Shipped,Golden,"1,800 ICUMSA",2024,1-Jun-24,30-Sep-24,Container,CIF,"Port of Savannah, GA",Nicaragua,Monte Rosa,1 MT, No ,"  (1,400.00)",MT,,Fixed,$918.00 
+,Sale,Gatorade,S00335,S00335.000,Not Shipped,White,150 ICUMSA,2024,1-May-24,30-Sep-24,Truck,DDP,"Pennsauken, PA",Nicaragua,San Antonio,1 MT, No ,"  (4,200.00)",MT,,Fixed,$933.00 
+,Sale,Quaker Oats,S00336,S00336.000,Not Shipped,Golden,"1,800 ICUMSA",2024,1-Sep-24,30-Sep-24,Container,CIF,"Port of Oakland, CA",Nicaragua,Monte Rosa,1 MT, No ,"  (2,200.00)",MT,,Fixed,$841.50 
+,Sale,Lipton,S00337,S00337.000,Not Shipped,Refined,45 ICUMSA,2024,1-Aug-24,31-Dec-24,Container,CIF,"Port of Savannah, GA",Nicaragua,San Antonio,1 MT, No ,  (880.00),MT,,Fixed,"$1,014.13 "
+,Sale,Campbell Soup Company,S00338,S00338.000,Not Shipped,Refined,45 ICUMSA,2024,1-Jan-24,1-Mar-24,Container,CIF,"Port of Long Beach, CA",Guatemala,Pantaleon,50 Lb., No ,  (600.00),MT,,Fixed,"$1,014.13 "
+,Sale,Del Monte Foods,S00382,S00382.000,Not Shipped,Refined,45 ICUMSA,2024,15-May-24,30-Jun-24,Container,CIF,"Port of Seattle, OR",Guatemala,Pantaleon,50 Lb., No ,  (120.00),MT,,Fixed,$848.78 
+,Purchase,Pantaleon,P01235,P01235.A00,Not Shipped,Refined,45 ICUMSA,2024,1-May-24,31-Dec-24,Ocean,FOB,Puerto Quetzal,Guatemala,Pantaleon,1 MT, No ,"  1,000.00 ",MT,,Futures,-
+,Purchase,Monte Rosa,P01289,P01289.000,Not Shipped,White,150 ICUMSA,2024,1-May-24,30-Nov-24,Ocean,FOB,Port of Corinto,Nicaragua,Monte Rosa,1 MT or 50 Lb., No ,"  15,000.00 ",MT,,Futures,-
+,Purchase,Monte Rosa,P01290,P01290.000,Not Shipped,Golden,"1,800 ICUMSA",2024,1-May-24,30-Sep-24,Ocean,FOB,Port of Corinto,Nicaragua,Monte Rosa,1 MT, No ,"  3,600.00 ",MT,,Futures,-
+,Purchase,Pantaleon,P01118,P01118.A00,Warehoused,Refined,45 ICUMSA,2023,1-May-23,30-Sep-23,Ocean,FOB,Puerto Quetzal,Guatemala,Pantaleon,1 MT, No ,  300.00 ,MT,,Futures,-
+,Purchase,Pantaleon,P01119,P01119.B00,Warehoused,Refined,45 ICUMSA,2023,1-May-23,30-Sep-23,Ocean,FOB,Puerto Quetzal,Guatemala,Pantaleon,50 Lb., No ,"  2,000.00 ",MT,,Futures,-
+,Purchase,Pantaleon,P01236,P01236.B00,Not Shipped,Refined,45 ICUMSA,2024,1-May-24,31-Dec-24,Ocean,FOB,Puerto Quetzal,Guatemala,Pantaleon,50 Lb., No ,"  9,000.00 ",MT,,Futures,-
+,Purchase,San Antonio,P01311,P01311.000,Not Shipped,Refined,45 ICUMSA,2024,1-May-24,30-Nov-24,Ocean,FOB,"Port of Corinto, NI",Nicaragua,San Antonio,1 MT, No ,"  3,000.00 ",MT,,Futures,-
+,Purchase,Benito,P01318,P01318.000,Not Shipped,White,200 ICUMSA,2024,1-May-24,30-Sep-24,Ocean,FOB,Port Coatzocoalcos,Mexico,Benito,1 MT, No ,"  8,000.00 ",MT,,Futures,-
+,Purchase,San Antonio,P01312,P01312.000,Not Shipped,White,150 ICUMSA,2024,1-May-24,30-Sep-24,Ocean,FOB,"Port of Corinto, NI",Nicaragua,San Antonio,1 MT, No ,"  13,700.00 ",MT,,Futures,-
+,Purchase,Magdalena,P03888,P0388.000,In-Transit,Refined,45 ICUMSA,2023,1-Sep-23,31-Dec-23,Ocean,FOB,Puerto Quetzal,Guatemala,Magdalena,1 MT, No ,"  1,000.00 ",MT,,Futures,-
+,,,,,,,,,,,,,,,,,,"  4,953.00 ",,,,

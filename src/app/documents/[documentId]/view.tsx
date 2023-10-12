@@ -6,6 +6,8 @@ import { measureImage } from "@/utils/image"
 import { Document, Entity } from "@/lib/google"
 import { trpc } from "@/lib/trpc"
 
+import { useEffectOnce } from "@/hooks/use-effect-once"
+
 import { Skeleton } from "@/components/ui/skeleton"
 import { DocumentChat } from "@/components/document-chat"
 import { DocumentBlock } from "@/components/document/block"
@@ -14,7 +16,6 @@ import { DocumentEntity } from "@/components/document/entity"
 import { DocumentPagination } from "@/components/document/pagination"
 import { EntityList } from "@/components/entity/list"
 import { Header } from "@/components/header"
-import { DocumentRisks } from "@/components/risks"
 
 export function DocumentView({ doc }: { doc: Document | null }) {
   const [highlight, setHighlight] = useState<Entity | null>(null)
@@ -22,6 +23,7 @@ export function DocumentView({ doc }: { doc: Document | null }) {
 
   const [page, setPage] = useState(0)
   const [editable, setEditable] = useState(false)
+  const [context, setContext] = useState<Record<string, string> | null>(null)
 
   const mutation = trpc.processDocument.useMutation()
 
@@ -31,6 +33,19 @@ export function DocumentView({ doc }: { doc: Document | null }) {
     mutation.isLoading ||
     (imageData && imageSize.width === 0 && imageSize.height === 0)
 
+  useEffectOnce(() => {
+    async function fetchAll() {
+      const [costs, trades] = await Promise.all([
+        fetch("/fixtures/costs.csv").then((res) => res.text()),
+        fetch("/fixtures/trades.csv").then((res) => res.text()),
+      ])
+      setContext({
+        costs,
+        trades,
+      })
+    }
+    fetchAll()
+  })
   useEffect(() => {
     if (imageData) {
       measureImage(imageData).then((size) => {
@@ -57,7 +72,6 @@ export function DocumentView({ doc }: { doc: Document | null }) {
             />
           </div>
         }
-        actions={<DocumentRisks />}
       />
 
       {isLoading ? (
@@ -120,7 +134,7 @@ export function DocumentView({ doc }: { doc: Document | null }) {
             </div>
           </div>
           <div className="hidden h-full w-[400px] shrink-0 flex-col overflow-y-auto lg:flex">
-            <DocumentChat doc={doc} />
+            <DocumentChat doc={doc} context={context} />
           </div>
         </div>
       )}
