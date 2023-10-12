@@ -8,8 +8,13 @@ import { prisma } from "@/lib/prisma"
 export async function POST(request: Request): Promise<NextResponse> {
   const { searchParams } = new URL(request.url)
   const filename = searchParams.get("filename")
+  const type = searchParams.get("type") as
+    | "BILL_OF_LADING"
+    | "CONTRACT"
+    | "INVOICE"
 
   invariant(filename, "Filename is missing")
+  invariant(type, "Type is missing")
   invariant(request.body, "Request body is missing")
 
   const file = await request.arrayBuffer()
@@ -25,7 +30,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   const fileUpload = await prisma.fileUpload.create({
     data: {
       name: filename,
-      type: "BILL_OF_LADING",
+      type,
       url: blob.url,
       document: response.document as { [key: string]: string },
     },

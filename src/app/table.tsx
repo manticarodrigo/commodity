@@ -106,8 +106,8 @@ export const columns: ColumnDef<FileUpload>[] = [
       }
 
       const colorMap = {
-        BILL_OF_LADING: "bg-blue-500",
-        CONTRACT: "bg-green-500",
+        BILL_OF_LADING: "bg-sky-500",
+        CONTRACT: "bg-purple-500",
         INVOICE: "bg-yellow-500",
       }
 

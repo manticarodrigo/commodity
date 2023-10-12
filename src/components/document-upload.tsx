@@ -13,8 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-
-import { Input } from "./ui/input"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export function DocumentUpload() {
   const router = useRouter()
@@ -46,6 +55,7 @@ export function DocumentUpload() {
             const formData = new FormData(event.target as HTMLFormElement)
 
             const files = formData.getAll("files") as File[]
+            const type = formData.get("type") as string
 
             if (!files) {
               throw new Error("No files selected")
@@ -56,7 +66,9 @@ export function DocumentUpload() {
             await Promise.all(
               Array.from(files).map(async (file) => {
                 await fetch(
-                  `/api/upload?filename=${encodeURIComponent(file.name)}`,
+                  `/api/upload?filename=${encodeURIComponent(
+                    file.name
+                  )}&type=${encodeURIComponent(type)}`,
                   {
                     method: "POST",
                     body: file,
@@ -70,7 +82,26 @@ export function DocumentUpload() {
             router.refresh()
           }}
         >
-          <Input name="files" multiple type="file" accept=".pdf" />
+          <Label>
+            <div className="mb-2">Document type</div>
+            <Select required name="type">
+              <SelectTrigger>
+                <SelectValue placeholder="Select a document type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Types</SelectLabel>
+                  <SelectItem value="BILL_OF_LADING">Bill of lading</SelectItem>
+                  <SelectItem value="CONTRACT">Contract</SelectItem>
+                  <SelectItem value="INVOICE">Invoice</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </Label>
+          <Label>
+            <div className="mb-2">Files</div>
+            <Input name="files" multiple type="file" accept=".pdf" />
+          </Label>
           <Button type="submit">
             {uploading ? (
               <Loader className="mr-2 h-4 w-4 animate-spin" />

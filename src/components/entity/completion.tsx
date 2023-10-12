@@ -35,9 +35,9 @@ export function DocumentCompletion(props: Props) {
   useEffectOnce(() => {
     if (props.doc?.text && !isLoading) {
       complete(`
-        You are a state of the art commodity trading contract processor. Take the appended contract text and follow the instructions below.
+        You are a state of the art commodity trading document processor. Take the appended document text and follow the instructions below.
     
-        List out each clause you recognize in the text from the following options: Seller, Buyer, Quantity, Quality, Packing, Origin, Destination, Delivery, Delivery Method, Price, Payment Terms, Weight, Quality & Packing, Title, Insurance, License, Taxation, Assignment, Insolvence, Exclusions, Force Majeure, Arbitration, Governing Law, Status & Powers
+        List out each entity you recognize in the text.
     
         Provide your answer as a simple markdown list with a title and a description or value like so:
 
@@ -50,7 +50,7 @@ export function DocumentCompletion(props: Props) {
         **Force Majeure**
         The fulfillment of this contract adheres to the force majeure rules of the Refined Sugar Association.
 
-        The contract text is appended below:
+        The text is appended below:
         ${props.doc?.text ?? ""}
       `).then((res) => {
         setText(res ?? "")
