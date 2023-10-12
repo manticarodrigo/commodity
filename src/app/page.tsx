@@ -8,6 +8,8 @@ import { Header } from "@/components/header"
 
 import { DocumentTable } from "./table"
 
+export const dynamic = "force-dynamic"
+
 export default async function RootPage() {
   const fileUploads = await prisma.fileUpload.findMany({
     orderBy: {

@@ -25,7 +25,6 @@ import {
   Receipt,
   ScrollText,
   Ship,
-  X,
 } from "lucide-react"
 
 import { trpc } from "@/lib/trpc"
@@ -123,29 +122,27 @@ export const columns: ColumnDef<FileUpload>[] = [
   },
   {
     accessorKey: "status",
-    header: "Processing Status",
+    header: "Revision Status",
     cell: ({ row }) => {
-      if (row.original.status === "success") {
-        return (
-          <Badge className="bg-green-500 capitalize">
-            <Check className="mr-2 h-4 w-4" />
-            {row.original.status}
-          </Badge>
-        )
-      }
-
-      if (row.original.status === "failed") {
+      if (row.original.id === "clnnhvwll0002yfw3fhav08a6") {
         return (
           <Badge className="bg-red-500 capitalize">
-            <X className="mr-2 h-4 w-4" />
-            {row.original.status}
+            <CircleDashed className="mr-2 h-4 w-4" />
+            Discrepancies
           </Badge>
         )
       }
-
+      if (row.original.id === "clnnhvgev0001yfw30hfnv07q") {
+        return (
+          <Badge className="bg-red-500 capitalize">
+            <CircleDashed className="mr-2 h-4 w-4" />
+            Risks
+          </Badge>
+        )
+      }
       return (
-        <Badge className="bg-violet-500 capitalize">
-          <CircleDashed className="mr-2 h-4 w-4" />
+        <Badge className="bg-green-500 capitalize">
+          <Check className="mr-2 h-4 w-4" />
           {row.original.status}
         </Badge>
       )

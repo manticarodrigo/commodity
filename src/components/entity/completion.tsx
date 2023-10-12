@@ -4,8 +4,6 @@ import { Download, Edit, Lock } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import TextareaAutosize from "react-textarea-autosize"
 
-import { Document } from "@/lib/google"
-
 import { useEffectOnce } from "@/hooks/use-effect-once"
 
 import { Button } from "@/components/ui/button"
@@ -21,7 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 interface Props {
-  doc: Document | null
+  prompt: string
   editable: boolean
   onClickEdit: () => void
 }
@@ -33,26 +31,8 @@ export function DocumentCompletion(props: Props) {
   })
 
   useEffectOnce(() => {
-    if (props.doc?.text && !isLoading) {
-      complete(`
-        You are a state of the art commodity trading document processor. Take the appended document text and follow the instructions below.
-    
-        List out each entity you recognize in the text.
-    
-        Provide your answer as a simple markdown list with a title and a description or value like so:
-
-        **Seller**
-        Acme Inc.
-
-        **Buyer**
-        Widget Corp.
-
-        **Force Majeure**
-        The fulfillment of this contract adheres to the force majeure rules of the Refined Sugar Association.
-
-        The text is appended below:
-        ${props.doc?.text ?? ""}
-      `).then((res) => {
+    if (props.prompt && !isLoading) {
+      complete(props.prompt).then((res) => {
         setText(res ?? "")
       })
     }
