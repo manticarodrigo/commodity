@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { promises } from "fs"
 import DocumentAI from "@google-cloud/documentai"
 
 const { DocumentProcessorServiceClient } = DocumentAI.v1
 
+const processorId = "13ba0a2985996da3"
 const projectId = "896559694339"
 
 const client = new DocumentProcessorServiceClient({
@@ -17,7 +17,7 @@ const client = new DocumentProcessorServiceClient({
   },
 })
 
-export async function processDocument(processorId: string, content: string) {
+export async function processDocument(content: string) {
   const name = `projects/${projectId}/locations/us/processors/${processorId}`
   const request = {
     name: name,
@@ -29,10 +29,10 @@ export async function processDocument(processorId: string, content: string) {
 
   const [result] = await client.processDocument(request)
 
-  await promises.writeFile(
-    `src/fixtures/${processorId}.json`,
-    JSON.stringify(result)
-  )
+  // await promises.writeFile(
+  //   `src/fixtures/${processorId}.json`,
+  //   JSON.stringify(result)
+  // )
 
   return result
 }
@@ -164,15 +164,10 @@ export interface Dimension {
 }
 
 export interface Image {
-  content: Content
+  content: string
   mimeType: string
   width: number
   height: number
-}
-
-export interface Content {
-  type: string
-  data: number[]
 }
 
 export interface Token {

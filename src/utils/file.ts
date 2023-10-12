@@ -1,4 +1,4 @@
-export async function fileToString(file: File): Promise<string> {
+export async function fileToString(file: File | Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onloadend = async () => {

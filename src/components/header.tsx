@@ -4,7 +4,6 @@ import { FileText } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { DocumentSelect } from "@/components/document-select"
 import { ModeToggle } from "@/components/mode-toggle"
 
 export function Header({
@@ -43,10 +42,6 @@ export function Header({
           <Image src="/logo.png" alt="" width={120} height={40} />
           {/* <h1 className="font-mono font-bold">Pantaleon</h1> */}
         </Link>
-        <span className="hidden lg:block">
-          <span className="px-4">/</span>
-        </span>
-        <DocumentSelect />
       </div>
       <div className="flex items-center gap-2">
         {actions}

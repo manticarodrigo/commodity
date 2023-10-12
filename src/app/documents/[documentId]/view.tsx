@@ -1,18 +1,11 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
-import { bufferToBase64 } from "@/utils/encoding"
-import { fileToString } from "@/utils/file"
 import { measureImage } from "@/utils/image"
-import { Upload } from "lucide-react"
 
 import { Document, Entity } from "@/lib/google"
 import { trpc } from "@/lib/trpc"
 
-import { useEffectOnce } from "@/hooks/use-effect-once"
-
-import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { DocumentChat } from "@/components/document-chat"
 import { DocumentBlock } from "@/components/document/block"
@@ -23,37 +16,20 @@ import { EntityList } from "@/components/entity/list"
 import { Header } from "@/components/header"
 import { DocumentRisks } from "@/components/risks"
 
-export default function RootPage() {
-  const params = useParams()
-  const [doc, setDoc] = useState<Document | null>(null)
+export function DocumentView({ doc }: { doc: Document | null }) {
   const [highlight, setHighlight] = useState<Entity | null>(null)
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
 
   const [page, setPage] = useState(0)
   const [editable, setEditable] = useState(false)
-  const [isLoadingFixture, setIsLoadingFixture] = useState(false)
 
   const mutation = trpc.processDocument.useMutation()
 
-  const imageData = bufferToBase64(doc?.pages[page].image.content.data ?? [])
+  const imageData = doc?.pages[page].image.content ?? ""
 
   const isLoading =
-    isLoadingFixture ||
     mutation.isLoading ||
     (imageData && imageSize.width === 0 && imageSize.height === 0)
-
-  useEffectOnce(() => {
-    if (!doc) {
-      const url = `/fixtures/${params.processorId}.json`
-      setIsLoadingFixture(true)
-      fetch(url).then((response) => {
-        response.json().then((data) => {
-          setDoc(data.document)
-          setIsLoadingFixture(false)
-        })
-      })
-    }
-  })
 
   useEffect(() => {
     if (imageData) {
@@ -62,31 +38,6 @@ export default function RootPage() {
       })
     }
   }, [imageData])
-
-  const loadFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { files } = event.target
-    if (files && files[0]) {
-      const content = await fileToString(files[0])
-
-      mutation.mutate(
-        {
-          processorId: params.processorId as string,
-          content,
-        },
-        {
-          onSuccess: (result) => {
-            if (result.document) {
-              setDoc(result.document)
-            } else {
-              setDoc(null)
-            }
-          },
-        }
-      )
-    } else {
-      setDoc(null)
-    }
-  }
 
   const onClickEntity = (entity: Entity) => {
     setHighlight(entity)
@@ -106,29 +57,7 @@ export default function RootPage() {
             />
           </div>
         }
-        actions={
-          <>
-            <DocumentRisks />
-            <label>
-              <input
-                className="hidden"
-                accept=".pdf"
-                type="file"
-                onChange={loadFile}
-              />
-              <Button
-                asChild
-                size="icon"
-                variant="outline"
-                className="cursor-pointer"
-              >
-                <span>
-                  <Upload className="h-4 w-4" />
-                </span>
-              </Button>
-            </label>
-          </>
-        }
+        actions={<DocumentRisks />}
       />
 
       {isLoading ? (
@@ -139,27 +68,11 @@ export default function RootPage() {
       ) : missingData ? (
         <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-4 py-8">
           <div className="text-center">
-            <h2 className="font-mono text-lg font-bold">
-              Begin document processing
-            </h2>
+            <h2 className="font-mono text-lg font-bold">No document found.</h2>
             <p className="text-muted-foreground">
-              Select a PDF document from your device to begin processing.
+              Go back to the homepage and upload a document.
             </p>
           </div>
-          <label>
-            <input
-              className="hidden"
-              accept=".pdf"
-              type="file"
-              onChange={loadFile}
-            />
-            <Button asChild className="cursor-pointer">
-              <span>
-                <Upload className="mr-2 h-4 w-4" />
-                Upload document
-              </span>
-            </Button>
-          </label>
         </div>
       ) : (
         <div className="relative flex h-full min-h-0 w-full flex-col lg:flex-row">

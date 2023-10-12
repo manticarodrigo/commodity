@@ -1,6 +1,9 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { Prisma } from "@prisma/client"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -19,8 +22,13 @@ import {
   ChevronDown,
   CircleDashed,
   MoreHorizontal,
+  Receipt,
+  ScrollText,
+  Ship,
   X,
 } from "lucide-react"
+
+import { trpc } from "@/lib/trpc"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -44,41 +52,17 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export type FileUpload = {
-  id: string
-  name: string
-  type: "Bill of Lading" | "Invoice" | "Contract"
-  status: "processing" | "success" | "failed"
-  uploadedAt: Date
-  createdAt: Date
+export type FileUpload = Prisma.FileUploadGetPayload<{
+  select: {
+    id: true
+    name: true
+    type: true
+    url: true
+    createdAt: true
+  }
+}> & {
+  status: "success" | "failed" | "pending"
 }
-
-const data: FileUpload[] = [
-  {
-    id: "1",
-    name: "Bill of Lading #1",
-    type: "Bill of Lading",
-    status: "processing",
-    uploadedAt: new Date(),
-    createdAt: new Date(),
-  },
-  {
-    id: "2",
-    name: "Invoice #1",
-    type: "Invoice",
-    status: "success",
-    uploadedAt: new Date(),
-    createdAt: new Date(),
-  },
-  {
-    id: "3",
-    name: "Contract #1",
-    type: "Contract",
-    status: "failed",
-    uploadedAt: new Date(),
-    createdAt: new Date(),
-  },
-]
 
 export const columns: ColumnDef<FileUpload>[] = [
   {
@@ -101,8 +85,45 @@ export const columns: ColumnDef<FileUpload>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => row.original.name.replace(".pdf", ""),
+  },
+  {
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ row }) => {
+      const labelMap = {
+        BILL_OF_LADING: "Bill of Lading",
+        CONTRACT: "Contract",
+        INVOICE: "Invoice",
+      }
+
+      const iconMap = {
+        BILL_OF_LADING: Ship,
+        CONTRACT: ScrollText,
+        INVOICE: Receipt,
+      }
+
+      const colorMap = {
+        BILL_OF_LADING: "bg-blue-500",
+        CONTRACT: "bg-green-500",
+        INVOICE: "bg-yellow-500",
+      }
+
+      const Icon = iconMap[row.original.type]
+
+      return (
+        <Badge className={colorMap[row.original.type]}>
+          <Icon className="mr-2 h-4 w-4" />
+          {labelMap[row.original.type]}
+        </Badge>
+      )
+    },
+  },
+  {
     accessorKey: "status",
-    header: "Status",
+    header: "Processing Status",
     cell: ({ row }) => {
       if (row.original.status === "success") {
         return (
@@ -131,33 +152,18 @@ export const columns: ColumnDef<FileUpload>[] = [
     },
   },
   {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "type",
-    header: "Type",
-  },
-  {
     id: "upload date",
-    accessorKey: "uploadedAt",
+    accessorKey: "createdAt",
     header: "Upload Date",
     cell: ({ row }) => (
-      <div>{dayjs(row.original.uploadedAt).format("YYYY-MM-DD")}</div>
-    ),
-  },
-  {
-    id: "creation date",
-    accessorKey: "createdAt",
-    header: "Creation Date",
-    cell: ({ row }) => (
-      <div>{dayjs(row.original.uploadedAt).format("YYYY-MM-DD")}</div>
+      <div>{dayjs(row.original.createdAt).format("YYYY-MM-DD")}</div>
     ),
   },
   {
     id: "actions",
     enableHiding: false,
-    cell: () => {
+    cell: ({ row }) => {
+      const id = row.original.id
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -168,7 +174,9 @@ export const columns: ColumnDef<FileUpload>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>View & Edit</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/documents/${id}`}>View & Edit</Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Download</DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>
@@ -179,7 +187,7 @@ export const columns: ColumnDef<FileUpload>[] = [
   },
 ]
 
-export function DocumentTable() {
+export function DocumentTable({ data: data }: { data: FileUpload[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -207,6 +215,10 @@ export function DocumentTable() {
     },
   })
 
+  const router = useRouter()
+
+  const deleteMutation = trpc.deleteFileUploads.useMutation()
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -218,32 +230,58 @@ export function DocumentTable() {
           }
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
+        <div className="ml-auto flex gap-2">
+          {Object.values(rowSelection).some(Boolean) ? (
+            <Button
+              variant="outline"
+              onClick={() => {
+                deleteMutation.mutate(
+                  {
+                    fileUploadIds: Object.keys(rowSelection).map(
+                      (idx) => data[Number(idx)].id
+                    ),
+                  },
+                  {
+                    onSuccess: () => {
+                      router.refresh()
+                      setRowSelection({})
+                    },
+                  }
                 )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              }}
+            >
+              {`Delete ${
+                Object.values(rowSelection).filter(Boolean).length
+              } document(s)`}
+            </Button>
+          ) : null}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  )
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

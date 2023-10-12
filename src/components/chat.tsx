@@ -1,3 +1,5 @@
+"use client"
+
 import { Message } from "ai"
 import { useChat } from "ai/react"
 import {

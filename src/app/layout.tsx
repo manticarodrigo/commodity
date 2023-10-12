@@ -9,8 +9,6 @@ import { Inter } from "next/font/google"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export const runtime = "edge"
-
 export const metadata: Metadata = {
   title: "CommodityAI",
   description: "Automated commodity trading workflows.",

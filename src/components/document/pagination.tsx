@@ -1,5 +1,3 @@
-import { bufferToBase64 } from "@/utils/encoding"
-
 import { Document } from "@/lib/google"
 import { cn } from "@/lib/utils"
 
@@ -16,9 +14,7 @@ export function DocumentPagination(props: Props) {
   return (
     <ol className="flex gap-4 bg-gradient-to-t from-secondary/50 via-secondary/25 p-4">
       {props.data.pages?.map((page, index) => {
-        const imageData = `data:image/png;base64,${bufferToBase64(
-          page.image?.content?.data
-        )}`
+        const imageData = `data:image/png;base64,${page.image?.content}`
         return (
           <li key={index} className="flex flex-col justify-center">
             <Button
