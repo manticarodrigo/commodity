@@ -1,6 +1,6 @@
 "use client"
 
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import { FileText } from "lucide-react"
 
 import {
@@ -13,14 +13,14 @@ import {
 } from "@/components/ui/select"
 
 export function DocumentSelect() {
-  const router = useRouter()
+  // const router = useRouter()
   const params = useParams()
 
   return (
     <Select
       value={params.processorId as string}
       onValueChange={(value) => {
-        router.push(`/processors/${value}`)
+        // router.push(`/processors/${value}`)
       }}
     >
       <SelectTrigger className="w-full lg:w-auto">

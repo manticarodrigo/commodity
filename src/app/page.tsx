@@ -3,7 +3,6 @@ import { Settings } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 
 import { Button } from "@/components/ui/button"
-import { Chat } from "@/components/chat"
 import { DocumentUpload } from "@/components/document-upload"
 import { Header } from "@/components/header"
 
@@ -45,14 +44,14 @@ export default async function RootPage() {
             data={fileUploads.map((u) => ({ ...u, status: "success" }))}
           />
         </div>
-        <div className="hidden h-full w-[400px] shrink-0 flex-col overflow-y-auto border-l lg:flex">
+        {/* <div className="hidden h-full w-[400px] shrink-0 flex-col overflow-y-auto border-l lg:flex">
           <Chat
             prompt={`
                 You are a state of the art document processor. Evaluate the appended text and answer the user's questions based on the provided document context.
                 Your response should be formatted as rich markdown with bold labels where possible.
             `}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   )
