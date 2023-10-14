@@ -42,9 +42,7 @@ export default async function RootPage() {
           </ul>
         </div>
         <div className="h-full w-full min-w-0 overflow-auto px-4">
-          <DocumentTable
-            data={fileUploads.map((u) => ({ ...u, status: "success" }))}
-          />
+          <DocumentTable data={fileUploads} />
         </div>
         {/* <div className="hidden h-full w-[400px] shrink-0 flex-col overflow-y-auto border-l lg:flex">
           <Chat

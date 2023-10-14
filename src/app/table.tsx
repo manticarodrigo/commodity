@@ -21,11 +21,13 @@ import {
   Check,
   ChevronDown,
   CircleDashed,
+  Loader,
   MoreHorizontal,
   Receipt,
   ScrollText,
   Ship,
 } from "lucide-react"
+import { useDebounce } from "use-debounce"
 
 import { trpc } from "@/lib/trpc"
 
@@ -59,9 +61,7 @@ export type FileUpload = Prisma.FileUploadGetPayload<{
     url: true
     createdAt: true
   }
-}> & {
-  status: "success" | "failed" | "pending"
-}
+}>
 
 export const columns: ColumnDef<FileUpload>[] = [
   {
@@ -143,7 +143,7 @@ export const columns: ColumnDef<FileUpload>[] = [
       return (
         <Badge className="bg-green-500 capitalize">
           <Check className="mr-2 h-4 w-4" />
-          {row.original.status}
+          Success
         </Badge>
       )
     },
@@ -208,7 +208,8 @@ export const columns: ColumnDef<FileUpload>[] = [
   },
 ]
 
-export function DocumentTable({ data: data }: { data: FileUpload[] }) {
+export function DocumentTable(props: { data: FileUpload[] }) {
+  const router = useRouter()
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -216,6 +217,23 @@ export function DocumentTable({ data: data }: { data: FileUpload[] }) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const [query, setQuery] = React.useState("")
+  const [debounced] = useDebounce(query, 500)
+
+  const searchQuery = trpc.searchFileUploads.useQuery(
+    {
+      query: debounced,
+    },
+    {
+      keepPreviousData: true,
+      enabled: query.length > 0,
+    }
+  )
+
+  const deleteMutation = trpc.deleteFileUploads.useMutation()
+
+  const data = query.length > 0 ? searchQuery.data ?? props.data : props.data
 
   const table = useReactTable({
     data,
@@ -236,21 +254,19 @@ export function DocumentTable({ data: data }: { data: FileUpload[] }) {
     },
   })
 
-  const router = useRouter()
-
-  const deleteMutation = trpc.deleteFileUploads.useMutation()
+  const isLoading =
+    !!query && (searchQuery.isLoading || searchQuery.isPreviousData)
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
           placeholder="Search for documents"
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
           className="max-w-sm"
         />
+        {isLoading ? <Loader className="ml-2 h-4 w-4 animate-spin" /> : null}
         <div className="ml-auto flex gap-2">
           {Object.values(rowSelection).some(Boolean) ? (
             <Button

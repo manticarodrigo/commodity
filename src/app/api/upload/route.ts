@@ -3,6 +3,7 @@ import { put } from "@vercel/blob"
 import invariant from "tiny-invariant"
 
 import { processDocument } from "@/lib/google"
+import { generateEmbedding } from "@/lib/openai"
 import { prisma } from "@/lib/prisma"
 
 export async function POST(request: Request): Promise<NextResponse> {
@@ -38,6 +39,14 @@ export async function POST(request: Request): Promise<NextResponse> {
       id: true,
     },
   })
+
+  const embedding = await generateEmbedding(response.document?.text ?? "")
+
+  await prisma.$executeRaw`
+    UPDATE "FileUpload"
+    SET embedding = ${embedding}::vector
+    WHERE id = ${fileUpload.id}
+  `
 
   return NextResponse.json(fileUpload)
 }
